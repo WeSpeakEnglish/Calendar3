@@ -76,19 +76,22 @@ select.btn { padding-right: 8px }
 /* ---------- year view: month cards ---------- */
 .months { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px }
 .months.is-month { display: block }
-.month { background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); padding: 12px 14px 12px; min-width: 0 }
+.month { background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); padding: 12px 14px 14px; min-width: 0;
+  display: flex; flex-direction: column; align-items: center }
 .month.is-now { box-shadow: var(--shadow), inset 0 0 0 1.5px var(--accent-soft) }
-.month h2 { margin: 0 0 6px }
-.mtitle { border: 0; background: none; padding: 2px 6px; margin-left: 30px; border-radius: 8px; font-family: var(--f-display); font-variation-settings: "SOFT" 100;
+.month h2 { margin: 0 0 6px; text-align: center }
+.mtitle { border: 0; background: none; padding: 2px 10px; border-radius: 8px; font-family: var(--f-display); font-variation-settings: "SOFT" 100;
   font-weight: 600; font-size: 19px; color: var(--heading); display: inline-flex; align-items: baseline; gap: 6px }
-.mtitle::after { content: "›"; font-size: 15px; opacity: 0; transform: translateX(-3px) }
+.mtitle { position: relative }
+.mtitle::after { content: "›"; position: absolute; left: 100%; font-size: 15px; opacity: 0; transform: translateX(-3px) }
 .mtitle:hover { background: var(--surface-2) }
 .mtitle:hover::after, .mtitle:focus-visible::after { opacity: .7; transform: none }
-.month table { border-collapse: separate; border-spacing: 1px 2px; font-variant-numeric: tabular-nums }
-.month th { font-weight: 600; text-align: left; width: 32px; padding: 0 4px 0 0; font-size: 12px; color: var(--muted); letter-spacing: .03em }
+.month table { border-collapse: separate; border-spacing: 1px 2px; font-variant-numeric: tabular-nums; margin: 0 auto }
+.month th { font-weight: 600; text-align: center; vertical-align: middle; width: 30px; padding: 0 4px 0 0; font-size: 12px; color: var(--muted); letter-spacing: .03em }
 .month tr.sun th { color: var(--sun) }
 .month td { padding: 0 }
-.day { position: relative; width: 30px; height: 30px; border: 0; background: none; border-radius: 50%; font-size: 14px; font-weight: 500; padding: 0 0 2px; text-align: center; font-variant-numeric: tabular-nums }
+.day { position: relative; display: grid; place-items: center; width: 30px; height: 30px; border: 0; background: none; border-radius: 50%; font-size: 14px; font-weight: 500; padding: 0; text-align: center; font-variant-numeric: tabular-nums }
+.pad { display: block; width: 30px; height: 30px }
 .day:hover { background: var(--surface-2) }
 tr.sun .day, .day.hol { color: var(--sun) }
 .day.hol { font-weight: 800 }
@@ -449,14 +452,14 @@ function renderMonths() {
   for (let m = 0; m < 12; m++) {
     const off = (new Date(Date.UTC(year, m, 1)).getUTCDay() + 6) % 7;
     const days = new Date(Date.UTC(year, m + 1, 0)).getUTCDate();
-    const cols = Math.ceil((off + days) / 7);
+    const cols = 6;   /* always six week columns, so every month card has the same grid */
     const isNow = year === now.getFullYear() && m === now.getMonth();
     html += `<div class="month${isNow ? " is-now" : ""}"><h2><button class="mtitle" data-month="${m}" title="${esc(t("openMonth", { month: T.months[m] }))}">${esc(T.months[m])}</button></h2><table><tbody>`;
     for (let r = 0; r < 7; r++) {
       html += `<tr${r === 6 ? ' class="sun"' : ""}><th scope="row">${esc(T.weekdays[r])}</th>`;
       for (let c = 0; c < cols; c++) {
         const d = c * 7 + r - off + 1;
-        if (d < 1 || d > days) { html += "<td></td>"; continue; }
+        if (d < 1 || d > days) { html += '<td><span class="pad" aria-hidden="true"></span></td>'; continue; }
         const key = iso(year, m, d), evs = map[key] || [];
         const cls = ["day"];
         if (evs.some(e => e.type === "holiday")) cls.push("hol");
