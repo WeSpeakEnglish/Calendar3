@@ -5,8 +5,29 @@
     "en": {
       "name": "English",
       "locale": "en-GB",
-      "months": ["January","February","March","April","May","June","July","August","September","October","November","December"],
-      "weekdays": ["Mo","Tu","We","Th","Fr","Sa","Su"],
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "weekdays": [
+        "Mo",
+        "Tu",
+        "We",
+        "Th",
+        "Fr",
+        "Sa",
+        "Su"
+      ],
       "ui": {
         "prevYear": "Previous year",
         "nextYear": "Next year",
@@ -135,14 +156,48 @@
         "tDisconnected": "Disconnected. The last loaded copy stays in this browser.",
         "tUsingBuiltIn": "Using the built-in copy",
         "tSaveAsFailed": "The Save-as window failed – choose the existing file to save into",
-        "tSaveDenied": "Saving to the file wasn't allowed"
+        "tSaveDenied": "Saving to the file wasn't allowed",
+        "delete": "Delete",
+        "deleteConfirm": "Delete?",
+        "tDeleted": "Deleted “{title}”",
+        "undo": "Undo",
+        "tRestored": "Restored “{title}”",
+        "holidayReadOnly": "Public holiday – edit the holidays file to change it",
+        "view": "View",
+        "viewYear": "Year",
+        "viewMonth": "Month",
+        "prevMonth": "Previous month",
+        "nextMonth": "Next month",
+        "openMonth": "Open {month}",
+        "more": "+{n} more"
       }
     },
     "cs": {
       "name": "Čeština",
       "locale": "cs-CZ",
-      "months": ["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"],
-      "weekdays": ["Po","Út","St","Čt","Pá","So","Ne"],
+      "months": [
+        "Leden",
+        "Únor",
+        "Březen",
+        "Duben",
+        "Květen",
+        "Červen",
+        "Červenec",
+        "Srpen",
+        "Září",
+        "Říjen",
+        "Listopad",
+        "Prosinec"
+      ],
+      "weekdays": [
+        "Po",
+        "Út",
+        "St",
+        "Čt",
+        "Pá",
+        "So",
+        "Ne"
+      ],
       "ui": {
         "prevYear": "Předchozí rok",
         "nextYear": "Další rok",
@@ -271,14 +326,48 @@
         "tDisconnected": "Odpojeno. Naposledy načtená kopie zůstává v prohlížeči.",
         "tUsingBuiltIn": "Používá se vestavěná kopie",
         "tSaveAsFailed": "Okno Uložit jako selhalo – vyberte existující soubor pro uložení",
-        "tSaveDenied": "Ukládání do souboru nebylo povoleno"
+        "tSaveDenied": "Ukládání do souboru nebylo povoleno",
+        "delete": "Smazat",
+        "deleteConfirm": "Smazat?",
+        "tDeleted": "Smazáno „{title}“",
+        "undo": "Zpět",
+        "tRestored": "Obnoveno „{title}“",
+        "holidayReadOnly": "Státní svátek – pro změnu upravte soubor svátků",
+        "view": "Zobrazení",
+        "viewYear": "Rok",
+        "viewMonth": "Měsíc",
+        "prevMonth": "Předchozí měsíc",
+        "nextMonth": "Další měsíc",
+        "openMonth": "Otevřít {month}",
+        "more": "+{n} další"
       }
     },
     "ru": {
       "name": "Русский",
       "locale": "ru-RU",
-      "months": ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
-      "weekdays": ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"],
+      "months": [
+        "Январь",
+        "Февраль",
+        "Март",
+        "Апрель",
+        "Май",
+        "Июнь",
+        "Июль",
+        "Август",
+        "Сентябрь",
+        "Октябрь",
+        "Ноябрь",
+        "Декабрь"
+      ],
+      "weekdays": [
+        "Пн",
+        "Вт",
+        "Ср",
+        "Чт",
+        "Пт",
+        "Сб",
+        "Вс"
+      ],
       "ui": {
         "prevYear": "Предыдущий год",
         "nextYear": "Следующий год",
@@ -407,7 +496,20 @@
         "tDisconnected": "Отключено. Последняя загруженная копия остаётся в браузере.",
         "tUsingBuiltIn": "Используется встроенная копия",
         "tSaveAsFailed": "Окно «Сохранить как» не открылось – выберите существующий файл для сохранения",
-        "tSaveDenied": "Сохранение в файл не разрешено"
+        "tSaveDenied": "Сохранение в файл не разрешено",
+        "delete": "Удалить",
+        "deleteConfirm": "Удалить?",
+        "tDeleted": "Удалено «{title}»",
+        "undo": "Отменить",
+        "tRestored": "Восстановлено «{title}»",
+        "holidayReadOnly": "Государственный праздник – измените файл праздников",
+        "view": "Вид",
+        "viewYear": "Год",
+        "viewMonth": "Месяц",
+        "prevMonth": "Предыдущий месяц",
+        "nextMonth": "Следующий месяц",
+        "openMonth": "Открыть: {month}",
+        "more": "ещё {n}"
       }
     }
   }

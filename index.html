@@ -6,133 +6,188 @@
 <title>Year Calendar CZ</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,100&family=Nunito:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: wall-calendar year grid (weekdays as rows, weeks as columns) + a side panel for the selected day */
+/* Layout: cosy wall calendar. Year view = soft month cards (weekdays as rows, weeks as columns);
+   month view = classic 7-column grid with event chips. Side panel for the selected day. */
 :root {
-  --bg: #f6f7f8; --surface: #ffffff; --ink: #1c2026; --muted: #69707a; --line: #e1e4e8;
-  --heading: #8b1d1d; --sun: #d4372a; --accent: #1f5fa8; --accent-soft: #e4edf8;
-  --t-holiday: #d4372a; --t-personal: #1f6fd1; --t-work: #23845a; --t-birthday: #b6690a; --t-other: #7b55b8;
-  --f-display: "Spectral", Georgia, "Times New Roman", serif;
-  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bg: #f3ede4; --surface: #fffaf4; --surface-2: #f8f0e5; --ink: #2f2925; --muted: #7c7066; --line: #e8ddcf;
+  --heading: #9b2f45; --sun: #b8324b; --accent: #3f6b57; --accent-soft: #e1ebe2; --on-accent: #fffaf4;
+  --t-holiday: #b8324b; --t-personal: #3a6ea5; --t-work: #3f8a5f; --t-birthday: #b87314; --t-other: #7d5ba6;
+  --shadow: 0 1px 2px rgb(70 45 20 / .05), 0 6px 18px rgb(70 45 20 / .07);
+  --f-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --f-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r: 14px;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #14161a; --surface: #1c1f24; --ink: #e8eaed; --muted: #9aa1ab; --line: #2e333a;
-  --heading: #e8988c; --sun: #ff7b6c; --accent: #79aef0; --accent-soft: #22324a;
-  --t-holiday: #ff7b6c; --t-personal: #6fa8f5; --t-work: #5cc58f; --t-birthday: #e6a24a; --t-other: #b49af0;
+  --bg: #1c1916; --surface: #26221e; --surface-2: #2c2723; --ink: #efe6db; --muted: #a99c8f; --line: #3a332c;
+  --heading: #eb93a3; --sun: #f0899a; --accent: #8fc2a6; --accent-soft: #2b3a31; --on-accent: #1c1916;
+  --t-holiday: #f0899a; --t-personal: #82afe3; --t-work: #85c9a0; --t-birthday: #e8b062; --t-other: #bba0e6;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 6px 18px rgb(0 0 0 / .25);
   color-scheme: dark } }
 :root[data-theme="dark"] {
-  --bg: #14161a; --surface: #1c1f24; --ink: #e8eaed; --muted: #9aa1ab; --line: #2e333a;
-  --heading: #e8988c; --sun: #ff7b6c; --accent: #79aef0; --accent-soft: #22324a;
-  --t-holiday: #ff7b6c; --t-personal: #6fa8f5; --t-work: #5cc58f; --t-birthday: #e6a24a; --t-other: #b49af0;
+  --bg: #1c1916; --surface: #26221e; --surface-2: #2c2723; --ink: #efe6db; --muted: #a99c8f; --line: #3a332c;
+  --heading: #eb93a3; --sun: #f0899a; --accent: #8fc2a6; --accent-soft: #2b3a31; --on-accent: #1c1916;
+  --t-holiday: #f0899a; --t-personal: #82afe3; --t-work: #85c9a0; --t-birthday: #e8b062; --t-other: #bba0e6;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 6px 18px rgb(0 0 0 / .25);
   color-scheme: dark }
 
 * { box-sizing: border-box }
 [hidden] { display: none !important }   /* hidden elements stay hidden even where a class sets display */
 html { -webkit-text-size-adjust: 100% }
-body { margin: 0 }
-body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.45;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px }
-.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 20px }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14.5px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 22px 44px }
+.wrap { max-width: 1260px; margin: 0 auto; display: grid; gap: 18px }
 button, input, select, textarea { font: inherit; color: inherit }
 button { cursor: pointer }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.disp { font-family: var(--f-display); font-variation-settings: "SOFT" 100; }
 
+/* ---------- header ---------- */
 header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; justify-content: space-between }
-.yearnav { display: flex; align-items: center; gap: 6px }
-.yearnav h1 { font-family: var(--f-display); font-weight: 700; font-size: 34px; margin: 0 6px; color: var(--heading); font-variant-numeric: tabular-nums; letter-spacing: .01em }
-.iconbtn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); font-size: 18px; line-height: 1 }
+.yearnav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+.yearnav h1 { font-family: var(--f-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 34px; line-height: 1.1; margin: 0 4px; color: var(--heading);
+  font-variant-numeric: tabular-nums; min-width: 4ch; text-align: center; text-wrap: balance }
+.iconbtn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); font-size: 19px; line-height: 1; box-shadow: var(--shadow) }
 .iconbtn:hover { border-color: var(--muted) }
+.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px }
+.seg button { border: 0; background: none; border-radius: 999px; padding: 5px 14px; font-weight: 600; font-size: 13px; color: var(--muted) }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow) }
 .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
-.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 7px 12px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 6px }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 7px 13px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px }
 .btn:hover { border-color: var(--muted) }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface) }
-.btn.danger { color: var(--sun) }
-.btn.armed { background: var(--sun); border-color: var(--sun); color: var(--surface) }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent) }
+.btn.armed { background: var(--sun); border-color: var(--sun); color: var(--on-accent) }
 select.btn { padding-right: 8px }
+.filebtn { position: relative }
 .filebtn input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
 .filebtn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px }
-.status { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center }
-.status .err { color: var(--sun) }
-.merge { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted) }
+.save-state { font-size: 12px; color: var(--muted) }
+#fileBtn.linked { border-color: var(--t-work); color: var(--t-work) }
+#fileBtn.attention { border-color: var(--t-birthday); color: var(--t-birthday) }
+.status { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center }
+.merge { display: inline-flex; gap: 6px; align-items: center }
+.srcchip { display: inline-flex; gap: 6px; align-items: center }
+.srcchip i { width: 8px; height: 8px; border-radius: 50% }
 
-.main { display: grid; grid-template-columns: minmax(0,1fr) 330px; gap: 24px; align-items: start }
-@media (max-width: 960px) { .main { grid-template-columns: minmax(0,1fr) } }
+.main { display: grid; grid-template-columns: minmax(0,1fr) 330px; gap: 22px; align-items: start }
+@media (max-width: 980px) { .main { grid-template-columns: minmax(0,1fr) } }
 
-.months { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 26px 18px }
-.month h2 { font-family: var(--f-display); font-weight: 700; font-size: 17px; color: var(--heading); margin: 0 0 4px 40px; text-transform: capitalize }
-.month table { border-collapse: collapse; font-variant-numeric: tabular-nums }
-.month th { font-weight: 500; text-align: left; width: 34px; padding: 0 4px 0 0; font-size: 14px; color: var(--ink) }
+/* ---------- year view: month cards ---------- */
+.months { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px }
+.months.is-month { display: block }
+.month { background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); padding: 12px 14px 12px; min-width: 0 }
+.month.is-now { box-shadow: var(--shadow), inset 0 0 0 1.5px var(--accent-soft) }
+.month h2 { margin: 0 0 6px }
+.mtitle { border: 0; background: none; padding: 2px 6px; margin-left: 30px; border-radius: 8px; font-family: var(--f-display); font-variation-settings: "SOFT" 100;
+  font-weight: 600; font-size: 19px; color: var(--heading); display: inline-flex; align-items: baseline; gap: 6px }
+.mtitle::after { content: "›"; font-size: 15px; opacity: 0; transform: translateX(-3px) }
+.mtitle:hover { background: var(--surface-2) }
+.mtitle:hover::after, .mtitle:focus-visible::after { opacity: .7; transform: none }
+.month table { border-collapse: separate; border-spacing: 1px 2px; font-variant-numeric: tabular-nums }
+.month th { font-weight: 600; text-align: left; width: 32px; padding: 0 4px 0 0; font-size: 12px; color: var(--muted); letter-spacing: .03em }
 .month tr.sun th { color: var(--sun) }
 .month td { padding: 0 }
-.day { position: relative; width: 29px; height: 25px; border: 0; background: none; border-radius: 4px; font-size: 14px; padding: 0 0 3px; text-align: center; font-variant-numeric: tabular-nums }
-.day:hover { background: var(--accent-soft) }
+.day { position: relative; width: 30px; height: 30px; border: 0; background: none; border-radius: 50%; font-size: 14px; font-weight: 500; padding: 0 0 2px; text-align: center; font-variant-numeric: tabular-nums }
+.day:hover { background: var(--surface-2) }
 tr.sun .day, .day.hol { color: var(--sun) }
-.day.hol { font-weight: 700 }
-.day.today { box-shadow: inset 0 0 0 1.5px var(--ink) }
-.day.sel { background: var(--accent); color: var(--surface) }
-.day.sel.hol, tr.sun .day.sel { color: var(--surface) }
-.dots { position: absolute; left: 0; right: 0; bottom: 2px; display: flex; justify-content: center; gap: 2px; pointer-events: none }
+.day.hol { font-weight: 800 }
+.day.today { background: var(--accent); color: var(--on-accent) }
+.day.sel { box-shadow: 0 0 0 2px var(--accent) }
+.day.today.sel { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent) }
+.dots { position: absolute; left: 0; right: 0; bottom: 3px; display: flex; justify-content: center; gap: 2px; pointer-events: none }
 .dots i { width: 4px; height: 4px; border-radius: 50%; background: currentColor }
-.day.sel .dots i { background: var(--surface) !important }
+.day.today .dots i { background: var(--on-accent) !important }
 
-aside { display: grid; gap: 18px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px) }
-@media (max-width: 960px) { aside { position: static } }
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; min-width: 0 }
-.panel h3 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 19px; text-wrap: balance }
-.label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
-.evlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px }
-.ev { display: grid; grid-template-columns: 4px minmax(0,1fr) auto; gap: 10px; align-items: start }
-.ev .bar { align-self: stretch; border-radius: 2px; background: var(--t-other) }
-.ev .t { font-weight: 600; overflow-wrap: anywhere }
+/* ---------- month view ---------- */
+.mview { background: var(--surface); border-radius: calc(var(--r) + 4px); box-shadow: var(--shadow); padding: 14px }
+.mv-wd, .mv-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px }
+.mv-wd { padding: 2px 2px 8px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted) }
+.mv-wd .sun { color: var(--sun) }
+.mv-cell { min-height: 108px; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); text-align: left; padding: 6px 7px 7px;
+  display: flex; flex-direction: column; gap: 4px; align-items: stretch }
+.mv-cell:hover { border-color: var(--muted) }
+.mv-cell.we { background: var(--surface-2) }
+.mv-cell.out { opacity: .45 }
+.mv-cell .num { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-variant-numeric: tabular-nums }
+.mv-cell.sun .num, .mv-cell.hol .num { color: var(--sun) }
+.mv-cell.today .num { background: var(--accent); color: var(--on-accent) }
+.mv-cell.sel { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent) }
+.chip { display: flex; align-items: center; gap: 5px; font-size: 12px; line-height: 1.3; padding: 2px 6px; border-radius: 6px; min-width: 0;
+  background: color-mix(in srgb, var(--c) 15%, transparent) }
+.chip::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--c) }
+.chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.chip.is-hol { font-weight: 700; color: var(--sun) }
+.more { font-size: 11px; color: var(--muted); padding-left: 4px }
+@media (max-width: 680px) {
+  .mview { padding: 8px }
+  .mv-wd, .mv-grid { gap: 3px }
+  .mv-cell { min-height: 60px; padding: 3px; border-radius: 9px; align-items: center }
+  .mv-cell .num { width: 24px; height: 24px; font-size: 13px }
+  .chip { width: 100%; height: 5px; padding: 0; font-size: 0; background: var(--c) }
+  .chip::before, .more { display: none }
+}
+
+/* ---------- side panel ---------- */
+aside { display: grid; gap: 16px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px) }
+@media (max-width: 980px) { aside { position: static } }
+.panel { background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); padding: 16px 18px; display: grid; gap: 12px; min-width: 0 }
+.panel h3 { margin: 0; font-family: var(--f-display); font-variation-settings: "SOFT" 100; font-weight: 600; font-size: 21px; line-height: 1.2; text-wrap: balance }
+.label { font-size: 11px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--muted) }
+.evlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px }
+.ev { display: grid; grid-template-columns: 10px minmax(0,1fr) auto; gap: 10px; align-items: start; background: var(--surface-2); border-radius: 10px; padding: 9px 10px }
+.ev .bar { width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: var(--t-other) }
+.ev .t { font-weight: 700; overflow-wrap: anywhere }
 .ev .n { color: var(--muted); font-size: 13px; overflow-wrap: anywhere }
 .ev .meta { font-size: 12px; color: var(--muted) }
-.ev .x { border: 0; background: none; color: var(--muted); font-size: 12px; padding: 2px 4px; border-radius: 4px }
-.ev .x:hover { color: var(--sun) }
-.ev .x.armed { background: var(--sun); color: var(--surface) }
+.hol-tag { font-size: 11px; font-weight: 800; letter-spacing: .03em; color: var(--t-holiday) }
+.del { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line); background: var(--surface); color: var(--sun);
+  font-size: 12px; font-weight: 700; padding: 4px 9px; border-radius: 8px; white-space: nowrap }
+.del:hover { border-color: var(--sun) }
+.del.armed { background: var(--sun); border-color: var(--sun); color: var(--on-accent) }
+.lock { color: var(--muted); padding: 4px 2px; display: inline-flex }
 .empty { color: var(--muted); margin: 0 }
-form { display: grid; gap: 8px }
+form { display: grid; gap: 9px }
 .field { display: grid; gap: 4px }
-.field label { font-size: 12px; color: var(--muted); font-weight: 500 }
-.field input[type=text], .field select { width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; background: var(--bg) }
+.field label { font-size: 12px; color: var(--muted); font-weight: 600 }
+.field input[type=text], .field select { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; background: var(--bg) }
 .row2 { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end }
-.check { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; padding-bottom: 8px }
+.check { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; padding-bottom: 9px }
 .up { list-style: none; margin: 0; padding: 0; display: grid }
-.up button { width: 100%; display: grid; grid-template-columns: 62px minmax(0,1fr); gap: 10px; text-align: left; border: 0; background: none; padding: 6px 4px; border-radius: 6px }
-.up button:hover { background: var(--accent-soft) }
+.up button { width: 100%; display: grid; grid-template-columns: 64px minmax(0,1fr); gap: 10px; text-align: left; border: 0; background: none; padding: 7px 6px; border-radius: 9px }
+.up button:hover { background: var(--surface-2) }
 .up .d { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px }
 .up .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted) }
 .legend span { display: inline-flex; gap: 5px; align-items: center }
 .legend i { width: 8px; height: 8px; border-radius: 50% }
 
-.overlay { position: fixed; inset: 0; background: rgb(0 0 0 / .45); display: grid; place-items: center; z-index: 20;
+/* ---------- dialogs, drop zone, toast ---------- */
+.overlay { position: fixed; inset: 0; background: rgb(30 20 10 / .45); display: grid; place-items: center; z-index: 20;
   padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)) }
 .overlay .panel { width: min(680px, 100%); max-height: 100%; overflow: auto }
-.overlay textarea { width: 100%; min-height: 300px; font: 12px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; border: 1px solid var(--line); border-radius: 6px; padding: 10px; background: var(--bg); resize: vertical }
+.overlay textarea { width: 100%; min-height: 300px; font: 12px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; border: 1px solid var(--line); border-radius: 9px; padding: 10px; background: var(--bg); resize: vertical }
 .help { font-size: 13px; color: var(--muted); margin: 0 }
-.help code { font-size: 12px; background: var(--bg); padding: 1px 4px; border-radius: 3px; color: var(--ink) }
+.help code { font-size: 12px; background: var(--bg); padding: 1px 4px; border-radius: 4px; color: var(--ink) }
 .actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap }
-.save-state { font-size: 12px; color: var(--muted) }
-#fileBtn.linked { border-color: var(--t-work); color: var(--t-work) }
-#fileBtn.attention { border-color: var(--t-birthday); color: var(--t-birthday) }
-dialog { border: 0; padding: 0; background: none; width: min(560px, calc(100% - 32px)); color: var(--ink) }
-dialog::backdrop { background: rgb(0 0 0 / .45) }
-#dropZone { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: rgb(0 0 0 / .4); pointer-events: none }
-#dropZone > div { background: var(--surface); border: 2px dashed var(--accent); border-radius: 12px; padding: 28px 36px; font-weight: 600; font-size: 17px; display: grid; gap: 4px; text-align: center }
-#dropZone small { font-weight: 400; font-size: 13px; color: var(--muted) }
-#toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
-  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 13px; max-width: calc(100% - 32px); z-index: 40 }
-#toast.show { opacity: 1; transform: translate(-50%, 0) }
-@media (prefers-reduced-motion: no-preference) { #toast { transition: opacity .2s, transform .2s } }
-@media (prefers-reduced-motion: no-preference) { .day, .btn, .up button { transition: background .12s, border-color .12s } }
-.hol-tag { font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--t-holiday) }
+dialog { border: 0; padding: 0; background: none; width: min(580px, calc(100% - 32px)); color: var(--ink) }
+dialog::backdrop { background: rgb(30 20 10 / .45) }
 .file-rows { display: grid; gap: 10px }
-.file-row { display: grid; gap: 6px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px }
+.file-row { display: grid; gap: 6px; background: var(--surface-2); border-radius: 10px; padding: 10px 12px }
 .file-row .label { display: flex; justify-content: space-between; gap: 8px }
 .acts { display: flex; flex-wrap: wrap; gap: 8px }
-.srcchip { display: inline-flex; gap: 6px; align-items: center }
-.srcchip i { width: 8px; height: 8px; border-radius: 50% }
+#dropZone { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: rgb(30 20 10 / .35); pointer-events: none }
+#dropZone > div { background: var(--surface); border: 2px dashed var(--accent); border-radius: 16px; padding: 28px 36px; font-weight: 700; font-size: 17px; display: grid; gap: 4px; text-align: center }
+#dropZone small { font-weight: 500; font-size: 13px; color: var(--muted) }
+#toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-size: 13px; max-width: calc(100% - 32px); z-index: 40 }
+#toast.show { opacity: 1; transform: translate(-50%, 0) }
+#toast.has-act { pointer-events: auto; display: flex; align-items: center; gap: 12px }
+.toast-act { border: 0; background: none; color: var(--accent-soft); font: inherit; font-weight: 800; text-decoration: underline; padding: 2px 4px; border-radius: 4px }
+@media (prefers-reduced-motion: no-preference) {
+  #toast { transition: opacity .2s, transform .2s }
+  .day, .btn, .up button, .mv-cell, .mtitle::after, .seg button { transition: background .15s, border-color .15s, opacity .15s, transform .15s }
+}
 </style>
 </head>
 <body>
@@ -143,7 +198,11 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
       <button class="iconbtn" id="prevY" data-i18n-aria="prevYear" aria-label="Previous year">‹</button>
       <h1 id="yearLbl">2026</h1>
       <button class="iconbtn" id="nextY" data-i18n-aria="nextYear" aria-label="Next year">›</button>
-      <button class="btn" id="todayBtn" style="margin-left:6px" data-i18n="today">Today</button>
+      <button class="btn" id="todayBtn" style="margin-left:4px" data-i18n="today">Today</button>
+      <div class="seg" role="group" data-i18n-aria="view" aria-label="View">
+        <button type="button" id="vYear" aria-pressed="true" data-i18n="viewYear">Year</button>
+        <button type="button" id="vMonth" aria-pressed="false" data-i18n="viewMonth">Month</button>
+      </div>
     </div>
     <div class="tools">
       <span class="save-state" id="saveState"></span>
@@ -253,7 +312,7 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
 (() => {
 /* Built-in copies, used until the separate JSON files are connected (filled in from the .json files at build time) */
 const DEFAULT_HOL = {"name": "Czech public holidays", "description": "Státní a ostatní svátky ČR (zákon č. 245/2000 Sb.). Date formats: \"MM-DD\" repeats every year, \"YYYY-MM-DD\" is a single day, \"easter\": N is N days from Easter Sunday.", "events": [{"id": "cz-0101", "date": "01-01", "title": "Den obnovy samostatného českého státu", "note": "Restoration Day of the Independent Czech State · New Year's Day", "type": "holiday"}, {"id": "cz-good-friday", "easter": -2, "title": "Velký pátek", "note": "Good Friday", "type": "holiday"}, {"id": "cz-easter-monday", "easter": 1, "title": "Velikonoční pondělí", "note": "Easter Monday", "type": "holiday"}, {"id": "cz-0501", "date": "05-01", "title": "Svátek práce", "note": "Labour Day", "type": "holiday"}, {"id": "cz-0508", "date": "05-08", "title": "Den vítězství", "note": "Liberation Day", "type": "holiday"}, {"id": "cz-0705", "date": "07-05", "title": "Den slovanských věrozvěstů Cyrila a Metoděje", "note": "Saints Cyril and Methodius Day", "type": "holiday"}, {"id": "cz-0706", "date": "07-06", "title": "Den upálení mistra Jana Husa", "note": "Jan Hus Day", "type": "holiday"}, {"id": "cz-0928", "date": "09-28", "title": "Den české státnosti", "note": "St. Wenceslas Day (Czech Statehood Day)", "type": "holiday"}, {"id": "cz-1028", "date": "10-28", "title": "Den vzniku samostatného československého státu", "note": "Independent Czechoslovak State Day", "type": "holiday"}, {"id": "cz-1117", "date": "11-17", "title": "Den boje za svobodu a demokracii", "note": "Struggle for Freedom and Democracy Day · International Students' Day", "type": "holiday"}, {"id": "cz-1224", "date": "12-24", "title": "Štědrý den", "note": "Christmas Eve", "type": "holiday"}, {"id": "cz-1225", "date": "12-25", "title": "1. svátek vánoční", "note": "Christmas Day", "type": "holiday"}, {"id": "cz-1226", "date": "12-26", "title": "2. svátek vánoční", "note": "St. Stephen's Day", "type": "holiday"}]};
-const BUILTIN_TR = {"name": "Calendar translations", "languages": {"en": {"name": "English", "locale": "en-GB", "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "weekdays": ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], "ui": {"prevYear": "Previous year", "nextYear": "Next year", "today": "Today", "save": "Save", "saveToFile": "Save to file…", "saveAs": "Save as…", "saveTitleDownload": "Download a backup of your events (Ctrl+S)", "saveTitleLinked": "Save to {name} (Ctrl+S)", "saveTitleFirst": "Choose where to save – calendar.json is suggested, only needed once (Ctrl+S)", "saveAsTitle": "Save events under another name or location (Ctrl+Shift+S)", "dataFiles": "Data files…", "reconnectFiles": "Reconnect files", "fileBtnLinked": "File: {name}", "dataFilesTip": "Events, holidays and translations files", "reconnectTip": "Click to allow access and load the files", "language": "Language", "importEvents": "Import events…", "exportBackup": "Export backup", "viewJson": "View / copy JSON", "mergeLabel": "Import adds to current events (untick to replace)", "dropTip": "Tip: drop .json files anywhere to add their events.", "evCount": "{n} events", "holCount": "{n} holidays · {name}", "builtIn": "built in", "yearCalendar": "Year calendar", "selectedDay": "Selected day", "noEvents": "No events on this day.", "addEvent": "Add event", "title": "Title", "titlePh": "e.g. Design review", "note": "Note (optional)", "type": "Type", "everyYear": "Every year", "addToDay": "Add to this day", "remove": "Remove", "confirm": "Confirm", "comingUp": "Coming up", "nothingScheduled": "Nothing scheduled.", "type_holiday": "Holiday", "type_personal": "Personal", "type_work": "Work", "type_birthday": "Birthday", "type_other": "Other", "ruleYearly": "Every year", "ruleOnce": "One-off", "ruleEaster": "Easter Sunday", "ruleEasterOffset": "Easter {offset} d", "exportTitle": "Events JSON", "exportHelpHtml": "This is your events file (public holidays are kept in their own file). Save the text as a <code>.json</code> file and load it with <b>Import events…</b>. Dates: <code>\"MM-DD\"</code> repeats yearly, <code>\"YYYY-MM-DD\"</code> is a single day, <code>\"easter\": -2</code> counts days from Easter Sunday. Types: holiday, personal, work, birthday, other.", "copy": "Copy", "close": "Close", "copied": "Copied", "copyFallback": "Text selected, press Ctrl+C", "dataFilesTitle": "Data files", "eventsFile": "Events file", "holidaysFile": "Public holidays file", "translationsFile": "Translations file", "stNotLinked": "not linked", "stLinked": "linked", "stNeedsPerm": "needs permission", "stBuiltIn": "built in", "stStored": "copy in browser", "evInfoNone": "Your events aren't using a file yet. They are kept in this browser only.", "evInfoLinked": "Using {name}. Every change is saved to it.", "evInfoPerm": "Using {name}, but the browser needs your permission again. Click \"Load from file\".", "loadFromFile": "Load from file", "saveToFileNow": "Save to file now", "stopUsingFile": "Stop using this file", "openEventsFile": "Open an events file…", "saveEventsAs": "Save events as…", "connectFile": "Connect file…", "reloadFromFile": "Reload from file", "disconnect": "Disconnect", "loadJson": "Load JSON…", "useBuiltIn": "Use built-in", "srcLinked": "Using {name}, read each time you open the calendar.", "srcPerm": "Using {name}, but the browser needs your permission again. Click \"Reload from file\".", "srcBuiltIn": "Using the built-in copy (or {file} next to the calendar on a server).", "srcStored": "Using a copy of “{name}” kept in this browser.", "entries": "{n} entries.", "dataFilesHelp": "Choose each file once, e.g. C:\\PRJ\\Calendar\\calendar.json. The calendar remembers them: every event change is saved to the events file, and all files are loaded when you open the calendar. The holidays and translations files are only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.", "fsNoteFrame": "Linking files on your disk works when the calendar is opened as its own page in Edge or Chrome (index.html from disk, https:// or localhost). Here you can still load JSON files and import or copy your events.", "fsNoteBrowser": "This browser can't link files on your disk (use Edge or Chrome). You can still load JSON files and import or export your events.", "askReplaceTitle": "Replace your events?", "askReplaceText": "Replace your {n} events with {m} events from {file}? Public holidays are not affected.", "replace": "Replace", "cancel": "Cancel", "unsavedTitle": "Unsaved changes", "unsavedText": "Your events have changes that aren't in {name} yet.", "saveEventsToFile": "Save events to the file", "loadDropChanges": "Load the file, drop changes", "dropTitle": "Drop to add events", "dropSub": "Nothing in the calendar is removed", "stateSaved": "Saved", "stateSavedBrowser": "Saved in this browser", "stateSaving": "Saving…", "stateSaveFailed": "Save failed – export a backup", "stateNoAuto": "Not saved automatically – use Export backup", "stateNotSavedTo": "Not saved to {name} yet", "stateSavedTo": "Saved to {name}", "stateSavingTo": "Saving to {name}…", "stateReconnect": "Saved in this browser – reconnect {name}", "stateCantSave": "Couldn't save to {name} – is it open elsewhere?", "tNotCalFile": "{file} isn't a calendar file: {err}", "tInvalidJson": "invalid JSON", "tReplaced": "Events replaced with {n} from the file", "tAdded": "Added {n} events", "tDup": ", {n} already there", "tSkipped": ", skipped {n} invalid", "tDropJson": "Drop .json calendar files", "tNoDownload": "If no download started, use View / copy JSON", "tSavedAuto": "Events are saved automatically here. For a file, use View / copy JSON.", "tDownloaded": "Downloaded a backup – this browser can't save to a chosen file", "tAccessDenied": "Access to the file wasn't allowed", "tNotEventsFile": "{name} isn't a calendar file. Choose a file made with Export backup or Save as…", "tSavedEventsTo": "Saved your events to {name}", "tLoadedEvents": "Loaded {n} events from {name}", "tLoadedSource": "Loaded {name}: {n} entries", "tNotSourceFile": "{name} isn't a valid file for this", "tSavedTo": "Saved to {name}", "tSavedRemembered": "Saved to {name} – it's remembered and loaded next time", "tCantRemember": "Saved to {name}. This browser can't remember the file, so you'll choose it again next visit.", "tCouldntOpen": "Couldn't open that file.", "tUnlinked": "Your events no longer use a file. The file wasn't changed.", "tDisconnected": "Disconnected. The last loaded copy stays in this browser.", "tUsingBuiltIn": "Using the built-in copy", "tSaveAsFailed": "The Save-as window failed – choose the existing file to save into", "tSaveDenied": "Saving to the file wasn't allowed"}}}};
+const BUILTIN_TR = {"name": "Calendar translations", "languages": {"en": {"name": "English", "locale": "en-GB", "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "weekdays": ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], "ui": {"prevYear": "Previous year", "nextYear": "Next year", "today": "Today", "save": "Save", "saveToFile": "Save to file…", "saveAs": "Save as…", "saveTitleDownload": "Download a backup of your events (Ctrl+S)", "saveTitleLinked": "Save to {name} (Ctrl+S)", "saveTitleFirst": "Choose where to save – calendar.json is suggested, only needed once (Ctrl+S)", "saveAsTitle": "Save events under another name or location (Ctrl+Shift+S)", "dataFiles": "Data files…", "reconnectFiles": "Reconnect files", "fileBtnLinked": "File: {name}", "dataFilesTip": "Events, holidays and translations files", "reconnectTip": "Click to allow access and load the files", "language": "Language", "importEvents": "Import events…", "exportBackup": "Export backup", "viewJson": "View / copy JSON", "mergeLabel": "Import adds to current events (untick to replace)", "dropTip": "Tip: drop .json files anywhere to add their events.", "evCount": "{n} events", "holCount": "{n} holidays · {name}", "builtIn": "built in", "yearCalendar": "Year calendar", "selectedDay": "Selected day", "noEvents": "No events on this day.", "addEvent": "Add event", "title": "Title", "titlePh": "e.g. Design review", "note": "Note (optional)", "type": "Type", "everyYear": "Every year", "addToDay": "Add to this day", "remove": "Remove", "confirm": "Confirm", "comingUp": "Coming up", "nothingScheduled": "Nothing scheduled.", "type_holiday": "Holiday", "type_personal": "Personal", "type_work": "Work", "type_birthday": "Birthday", "type_other": "Other", "ruleYearly": "Every year", "ruleOnce": "One-off", "ruleEaster": "Easter Sunday", "ruleEasterOffset": "Easter {offset} d", "exportTitle": "Events JSON", "exportHelpHtml": "This is your events file (public holidays are kept in their own file). Save the text as a <code>.json</code> file and load it with <b>Import events…</b>. Dates: <code>\"MM-DD\"</code> repeats yearly, <code>\"YYYY-MM-DD\"</code> is a single day, <code>\"easter\": -2</code> counts days from Easter Sunday. Types: holiday, personal, work, birthday, other.", "copy": "Copy", "close": "Close", "copied": "Copied", "copyFallback": "Text selected, press Ctrl+C", "dataFilesTitle": "Data files", "eventsFile": "Events file", "holidaysFile": "Public holidays file", "translationsFile": "Translations file", "stNotLinked": "not linked", "stLinked": "linked", "stNeedsPerm": "needs permission", "stBuiltIn": "built in", "stStored": "copy in browser", "evInfoNone": "Your events aren't using a file yet. They are kept in this browser only.", "evInfoLinked": "Using {name}. Every change is saved to it.", "evInfoPerm": "Using {name}, but the browser needs your permission again. Click \"Load from file\".", "loadFromFile": "Load from file", "saveToFileNow": "Save to file now", "stopUsingFile": "Stop using this file", "openEventsFile": "Open an events file…", "saveEventsAs": "Save events as…", "connectFile": "Connect file…", "reloadFromFile": "Reload from file", "disconnect": "Disconnect", "loadJson": "Load JSON…", "useBuiltIn": "Use built-in", "srcLinked": "Using {name}, read each time you open the calendar.", "srcPerm": "Using {name}, but the browser needs your permission again. Click \"Reload from file\".", "srcBuiltIn": "Using the built-in copy (or {file} next to the calendar on a server).", "srcStored": "Using a copy of “{name}” kept in this browser.", "entries": "{n} entries.", "dataFilesHelp": "Choose each file once, e.g. C:\\PRJ\\Calendar\\calendar.json. The calendar remembers them: every event change is saved to the events file, and all files are loaded when you open the calendar. The holidays and translations files are only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.", "fsNoteFrame": "Linking files on your disk works when the calendar is opened as its own page in Edge or Chrome (index.html from disk, https:// or localhost). Here you can still load JSON files and import or copy your events.", "fsNoteBrowser": "This browser can't link files on your disk (use Edge or Chrome). You can still load JSON files and import or export your events.", "askReplaceTitle": "Replace your events?", "askReplaceText": "Replace your {n} events with {m} events from {file}? Public holidays are not affected.", "replace": "Replace", "cancel": "Cancel", "unsavedTitle": "Unsaved changes", "unsavedText": "Your events have changes that aren't in {name} yet.", "saveEventsToFile": "Save events to the file", "loadDropChanges": "Load the file, drop changes", "dropTitle": "Drop to add events", "dropSub": "Nothing in the calendar is removed", "stateSaved": "Saved", "stateSavedBrowser": "Saved in this browser", "stateSaving": "Saving…", "stateSaveFailed": "Save failed – export a backup", "stateNoAuto": "Not saved automatically – use Export backup", "stateNotSavedTo": "Not saved to {name} yet", "stateSavedTo": "Saved to {name}", "stateSavingTo": "Saving to {name}…", "stateReconnect": "Saved in this browser – reconnect {name}", "stateCantSave": "Couldn't save to {name} – is it open elsewhere?", "tNotCalFile": "{file} isn't a calendar file: {err}", "tInvalidJson": "invalid JSON", "tReplaced": "Events replaced with {n} from the file", "tAdded": "Added {n} events", "tDup": ", {n} already there", "tSkipped": ", skipped {n} invalid", "tDropJson": "Drop .json calendar files", "tNoDownload": "If no download started, use View / copy JSON", "tSavedAuto": "Events are saved automatically here. For a file, use View / copy JSON.", "tDownloaded": "Downloaded a backup – this browser can't save to a chosen file", "tAccessDenied": "Access to the file wasn't allowed", "tNotEventsFile": "{name} isn't a calendar file. Choose a file made with Export backup or Save as…", "tSavedEventsTo": "Saved your events to {name}", "tLoadedEvents": "Loaded {n} events from {name}", "tLoadedSource": "Loaded {name}: {n} entries", "tNotSourceFile": "{name} isn't a valid file for this", "tSavedTo": "Saved to {name}", "tSavedRemembered": "Saved to {name} – it's remembered and loaded next time", "tCantRemember": "Saved to {name}. This browser can't remember the file, so you'll choose it again next visit.", "tCouldntOpen": "Couldn't open that file.", "tUnlinked": "Your events no longer use a file. The file wasn't changed.", "tDisconnected": "Disconnected. The last loaded copy stays in this browser.", "tUsingBuiltIn": "Using the built-in copy", "tSaveAsFailed": "The Save-as window failed – choose the existing file to save into", "tSaveDenied": "Saving to the file wasn't allowed", "delete": "Delete", "deleteConfirm": "Delete?", "tDeleted": "Deleted “{title}”", "undo": "Undo", "tRestored": "Restored “{title}”", "holidayReadOnly": "Public holiday – edit the holidays file to change it", "view": "View", "viewYear": "Year", "viewMonth": "Month", "prevMonth": "Previous month", "nextMonth": "Next month", "openMonth": "Open {month}", "more": "+{n} more"}}}};
 
 const TYPES = ["holiday", "personal", "work", "birthday", "other"];
 const KEY = "year-calendar-cz-v1";
@@ -264,7 +323,7 @@ const now = new Date();
 const TODAY = iso(now.getFullYear(), now.getMonth(), now.getDate());
 
 /* cal = your events (read/write file). SRC = read-only files: public holidays and translations. */
-let cal = null, year = now.getFullYear(), selected = TODAY, lang = "en", cache = {}, holSet = new WeakSet();
+let cal = null, view = "year", month = now.getMonth(), year = now.getFullYear(), selected = TODAY, lang = "en", cache = {}, holSet = new WeakSet();
 const SRC = {
   hol: { label: "holidaysFile", idb: "holidaysFile", file: "czech-holidays.json", builtin: DEFAULT_HOL,
          parse: (obj, fn) => toHol(obj, fn), count: d => d.events.length, data: null, source: "built-in", handle: null, perm: false },
@@ -311,7 +370,19 @@ function applyI18n() {
 }
 
 let toastTimer;
-function toast(s) { const el = $("toast"); el.textContent = s; el.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 4500); }
+/* toast(text) or toast(text, actionLabel, onAction) – the action (e.g. Undo) stays a little longer */
+function toast(s, actLabel, onAct) {
+  const el = $("toast"); el.textContent = s;
+  if (actLabel) {
+    const btn = document.createElement("button"); btn.type = "button"; btn.className = "toast-act"; btn.textContent = actLabel;
+    btn.onclick = () => { el.classList.remove("show"); onAct(); };
+    el.append(" ", btn);
+  }
+  el.classList.toggle("has-act", !!actLabel); el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), actLabel ? 8000 : 4500);
+}
+const BIN = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5M7 7v4M9 7v4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const LOCK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M4.5 7.5h7v6h-7zM6 7.5V5.5a2 2 0 0 1 4 0v2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
 /* save state is kept as a key so it re-translates when the language changes */
 let saveStateKey = null, saveStateVars = null;
 function setSaveState(key, vars) { saveStateKey = key; saveStateVars = vars; $("saveState").textContent = key ? t(key, vars) : ""; }
@@ -366,13 +437,21 @@ const eventsOn = d => expand(+d.slice(0, 4))[d] || [];
 
 /* ---------- rendering ---------- */
 function renderMonths() {
-  const map = expand(year), T = L();
+  const isMonth = view === "month", T = L();
+  $("months").classList.toggle("is-month", isMonth);
+  $("yearLbl").textContent = isMonth ? `${T.months[month]} ${year}` : year;
+  $("vYear").setAttribute("aria-pressed", !isMonth); $("vMonth").setAttribute("aria-pressed", isMonth);
+  $("prevY").setAttribute("aria-label", t(isMonth ? "prevMonth" : "prevYear"));
+  $("nextY").setAttribute("aria-label", t(isMonth ? "nextMonth" : "nextYear"));
+  if (isMonth) return renderMonthView();
+  const map = expand(year);
   let html = "";
   for (let m = 0; m < 12; m++) {
     const off = (new Date(Date.UTC(year, m, 1)).getUTCDay() + 6) % 7;
     const days = new Date(Date.UTC(year, m + 1, 0)).getUTCDate();
     const cols = Math.ceil((off + days) / 7);
-    html += `<div class="month"><h2>${esc(T.months[m])}</h2><table><tbody>`;
+    const isNow = year === now.getFullYear() && m === now.getMonth();
+    html += `<div class="month${isNow ? " is-now" : ""}"><h2><button class="mtitle" data-month="${m}" title="${esc(t("openMonth", { month: T.months[m] }))}">${esc(T.months[m])}</button></h2><table><tbody>`;
     for (let r = 0; r < 7; r++) {
       html += `<tr${r === 6 ? ' class="sun"' : ""}><th scope="row">${esc(T.weekdays[r])}</th>`;
       for (let c = 0; c < cols; c++) {
@@ -392,7 +471,32 @@ function renderMonths() {
     html += "</tbody></table></div>";
   }
   $("months").innerHTML = html;
-  $("yearLbl").textContent = year;
+}
+/* Month view: classic grid, Monday first, with the neighbouring months' days faded */
+function renderMonthView() {
+  const T = L(), off = (new Date(Date.UTC(year, month, 1)).getUTCDay() + 6) % 7;
+  const days = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const weeks = Math.ceil((off + days) / 7);
+  let html = `<div class="mview"><div class="mv-wd">${T.weekdays.map((w, i) => `<div${i === 6 ? ' class="sun"' : ""}>${esc(w)}</div>`).join("")}</div><div class="mv-grid">`;
+  for (let i = 0; i < weeks * 7; i++) {
+    const dt = new Date(Date.UTC(year, month, i - off + 1));
+    const key = iso(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate());
+    const evs = [...eventsOn(key)].sort((a, b) => isHol(b) - isHol(a)), col = i % 7;
+    const cls = ["mv-cell"];
+    if (dt.getUTCMonth() !== month) cls.push("out");
+    if (col >= 5) cls.push("we");
+    if (col === 6) cls.push("sun");
+    if (evs.some(e => e.type === "holiday")) cls.push("hol");
+    if (key === TODAY) cls.push("today");
+    if (key === selected) cls.push("sel");
+    const shown = evs.slice(0, 3), extra = evs.length - shown.length;
+    const tip = evs.map(e => e.title).join(" · ");
+    html += `<button class="${cls.join(" ")}" data-d="${key}"${tip ? ` title="${esc(tip)}"` : ""} aria-label="${key}${tip ? ": " + esc(tip) : ""}">
+      <span class="num">${dt.getUTCDate()}</span>
+      ${shown.map(e => `<span class="chip${e.type === "holiday" ? " is-hol" : ""}" style="--c:var(--t-${e.type})"><span>${esc(e.title)}</span></span>`).join("")}
+      ${extra > 0 ? `<span class="more">${esc(t("more", { n: extra }))}</span>` : ""}</button>`;
+  }
+  $("months").innerHTML = html + "</div></div>";
 }
 function fmt(d, opts) { const [y, m, dd] = d.split("-").map(Number); try { return new Intl.DateTimeFormat(L().locale, { timeZone: "UTC", ...opts }).format(new Date(Date.UTC(y, m - 1, dd))); } catch { return d; } }
 function rule(e) {
@@ -406,7 +510,8 @@ function renderDay() {
   $("dayEvents").innerHTML = evs.length ? evs.map(e => `
     <li class="ev"><span class="bar" style="background:var(--t-${e.type})"></span>
       <div><div class="t">${esc(e.title)}</div>${e.note ? `<div class="n">${esc(e.note)}</div>` : ""}<div class="meta">${isHol(e) ? `<span class="hol-tag">${esc(hol().name)}</span>` : esc(t("type_" + e.type))} · ${esc(rule(e))}</div></div>
-      ${isHol(e) ? "" : `<button class="x" data-del="${esc(e.id)}" aria-label="${esc(t("remove"))}: ${esc(e.title)}">${esc(t("remove"))}</button>`}</li>`).join("")
+      ${isHol(e) ? `<span class="lock" title="${esc(t("holidayReadOnly"))}" aria-label="${esc(t("holidayReadOnly"))}">${LOCK}</span>`
+        : `<button class="del" data-del="${esc(e.id)}" aria-label="${esc(t("delete"))}: ${esc(e.title)}">${BIN}<span>${esc(t("delete"))}</span></button>`}</li>`).join("")
     : `<li class="empty">${esc(t("noEvents"))}</li>`;
 }
 function renderUpcoming() {
@@ -491,16 +596,41 @@ function download(name, text, mime) {
 }
 
 /* ---------- interactions ---------- */
-$("months").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (b) { selected = b.dataset.d; renderMonths(); renderDay(); } });
-$("upcoming").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) { selected = b.dataset.go; year = +selected.slice(0, 4); renderMonths(); renderDay(); } });
-$("prevY").onclick = () => { year--; renderMonths(); };
-$("nextY").onclick = () => { year++; renderMonths(); };
-$("todayBtn").onclick = () => { year = now.getFullYear(); selected = TODAY; renderMonths(); renderDay(); };
+const goTo = d => { selected = d; year = +d.slice(0, 4); month = +d.slice(5, 7) - 1; renderMonths(); renderDay(); };
+$("months").addEventListener("click", e => {
+  const mt = e.target.closest("[data-month]");
+  if (mt) { month = +mt.dataset.month; view = "month"; renderMonths(); return; }
+  const b = e.target.closest("[data-d]"); if (!b) return;
+  if (view === "month" && b.classList.contains("out")) return goTo(b.dataset.d);   // a faded day from the next/previous month
+  selected = b.dataset.d; renderMonths(); renderDay();
+});
+$("upcoming").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) goTo(b.dataset.go); });
+const step = dir => {
+  if (view === "month") { month += dir; if (month < 0) { month = 11; year--; } if (month > 11) { month = 0; year++; } }
+  else year += dir;
+  renderMonths();
+};
+$("prevY").onclick = () => step(-1);
+$("nextY").onclick = () => step(1);
+$("todayBtn").onclick = () => goTo(TODAY);
+$("vYear").onclick = () => { view = "year"; renderMonths(); };
+$("vMonth").onclick = () => { view = "month"; if (+selected.slice(0, 4) === year) month = +selected.slice(5, 7) - 1; renderMonths(); };
 $("lang").onchange = e => { lang = e.target.value; store(KEY + "-lang", lang); rerenderAll(); };
+/* Delete: first click arms the button ("Delete?"), second click deletes. The message offers Undo. */
 $("dayEvents").addEventListener("click", e => {
   const b = e.target.closest("[data-del]"); if (!b) return;
-  if (!b.classList.contains("armed")) { b.classList.add("armed"); b.textContent = t("confirm"); setTimeout(() => { b.classList.remove("armed"); b.textContent = t("remove"); }, 3000); return; }
-  cal.events = cal.events.filter(x => x.id !== b.dataset.del); save();
+  if (!b.classList.contains("armed")) {
+    b.classList.add("armed"); b.querySelector("span").textContent = t("deleteConfirm");
+    setTimeout(() => { if (b.isConnected) { b.classList.remove("armed"); b.querySelector("span").textContent = t("delete"); } }, 3000);
+    return;
+  }
+  const idx = cal.events.findIndex(x => x.id === b.dataset.del); if (idx < 0) return;
+  const [gone] = cal.events.splice(idx, 1); save();
+  toast(t("tDeleted", { title: gone.title }), t("undo"), () => {
+    if (cal.events.some(x => x.id === gone.id)) return;
+    cal.events.splice(Math.min(idx, cal.events.length), 0, gone); save();
+    toast(t("tRestored", { title: gone.title }));
+  });
 });
 $("addForm").addEventListener("submit", e => {
   e.preventDefault();

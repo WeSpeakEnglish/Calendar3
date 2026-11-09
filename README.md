@@ -31,10 +31,12 @@ When the calendar is served from a web server, `czech-holidays.json` and `transl
 ## Everyday use
 
 - **Add an event:** click a day, fill in the title (and optionally a note and type), tick **Every year** for a yearly event, then click **Add to this day**.
-- **Remove an event:** click **Remove** next to it, then **Confirm**. Holidays can't be removed here; edit `czech-holidays.json` instead.
+- **Delete an event:** click a day, then **Delete** next to the event, then **Delete?** to confirm. The message that appears has **Undo**, which brings the event back. Holidays show a lock instead and can't be deleted here; edit `czech-holidays.json` instead.
 - **Save** (Ctrl+S): every change is already written to your events file automatically; **Save** writes immediately. The first time, it asks for a name and location (`calendar.json` is suggested).
 - **Save as…** (Ctrl+Shift+S): save your events under another name or in another folder. From then on, that file is the one that's remembered, saved to and loaded on the next visit. The previous file stays as it was.
-- **Year and language:** use the arrows next to the year and **Today** to move around. The language menu switches month and weekday names between English, Czech and Russian.
+- **Year and month view:** the calendar opens in the year view. Switch with **Year | Month** next to **Today**, or click a month's name in the year view to open it. The month view shows each day as a box with its events. Click a faded day to jump to the neighbouring month.
+- **Moving around:** the arrows step one year in the year view and one month in the month view. **Today** jumps back to today.
+- **Language:** the language menu switches all interface texts, month and weekday names.
 - **Coming up** lists the next eight events and holidays. Click one to jump to it.
 
 ## Importing and exporting events
