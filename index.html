@@ -123,6 +123,13 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
 #toast.show { opacity: 1; transform: translate(-50%, 0) }
 @media (prefers-reduced-motion: no-preference) { #toast { transition: opacity .2s, transform .2s } }
 @media (prefers-reduced-motion: no-preference) { .day, .btn, .up button { transition: background .12s, border-color .12s } }
+.hol-tag { font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--t-holiday) }
+.file-rows { display: grid; gap: 10px }
+.file-row { display: grid; gap: 6px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px }
+.file-row .label { display: flex; justify-content: space-between; gap: 8px }
+.acts { display: flex; flex-wrap: wrap; gap: 8px }
+.srcchip { display: inline-flex; gap: 6px; align-items: center }
+.srcchip i { width: 8px; height: 8px; border-radius: 50% }
 </style>
 </head>
 <body>
@@ -137,21 +144,21 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
     </div>
     <div class="tools">
       <span class="save-state" id="saveState"></span>
-      <button class="btn primary" id="saveNow" title="Save to the data file (Ctrl+S)">Save</button>
-      <button class="btn" id="fileBtn" hidden>Data file…</button>
+      <button class="btn primary" id="saveNow" title="Save events (Ctrl+S)">Save</button>
+      <button class="btn" id="fileBtn">Data files…</button>
       <select class="btn" id="lang" aria-label="Language">
         <option value="en">English</option>
         <option value="cs">Čeština</option>
         <option value="ru">Русский</option>
       </select>
-      <label class="btn filebtn">Import JSON…<input type="file" id="fileIn" accept=".json,application/json"></label>
+      <label class="btn filebtn">Import events…<input type="file" id="fileIn" accept=".json,application/json"></label>
       <button class="btn" id="exportJson">Export backup</button>
       <button class="btn" id="exportBtn">View / copy JSON</button>
-      <button class="btn danger" id="resetBtn">Reset to Czech holidays</button>
     </div>
   </header>
   <div class="status">
-    <span id="srcInfo">Loading events…</span>
+    <span class="srcchip"><i style="background:var(--t-personal)"></i><span id="evInfo"></span></span>
+    <span class="srcchip"><i style="background:var(--t-holiday)"></i><span id="holInfoShort"></span></span>
     <label class="merge"><input type="checkbox" id="mergeChk" checked> Import adds to current events (untick to replace)</label>
     <span>Tip: drop .json files anywhere to add their events.</span>
   </div>
@@ -192,8 +199,8 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
 
 <div class="overlay" id="exportDlg" hidden>
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="expTitle">
-    <h3 id="expTitle">Calendar JSON</h3>
-    <p class="help">Save this text as a <code>.json</code> file and load it again with <b>Load JSON…</b>. Dates: <code>"MM-DD"</code> repeats yearly, <code>"YYYY-MM-DD"</code> is a single day, <code>"easter": -2</code> counts days from Easter Sunday. Types: holiday, personal, work, birthday, other.</p>
+    <h3 id="expTitle">Events JSON</h3>
+    <p class="help">This is your events file (public holidays are kept in their own file). Save the text as a <code>.json</code> file and load it with <b>Import events…</b>. Dates: <code>"MM-DD"</code> repeats yearly, <code>"YYYY-MM-DD"</code> is a single day, <code>"easter": -2</code> counts days from Easter Sunday. Types: holiday, personal, work, birthday, other.</p>
     <textarea id="expText" readonly spellcheck="false"></textarea>
     <div class="actions">
       <span id="copyMsg" class="help" style="align-self:center"></span>
@@ -205,18 +212,35 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
 
 <dialog id="fileDlg">
   <div class="panel">
-    <h3>Data file</h3>
-    <p class="help" id="fileInfo"></p>
-    <div class="actions" id="fileLinked" style="justify-content:flex-start">
-      <button class="btn primary" type="button" id="fileLoad">Load from file</button>
-      <button class="btn" type="button" id="fileSave">Save to file now</button>
-      <button class="btn" type="button" id="fileUnlink">Stop using this file</button>
+    <h3>Data files</h3>
+    <p class="help" id="fsNote"></p>
+    <div class="file-rows">
+      <div class="file-row">
+        <div class="label"><span>Events file</span><span id="evState"></span></div>
+        <p class="help" id="fileInfo"></p>
+        <div class="acts fs-only" id="fileLinked">
+          <button class="btn primary" type="button" id="fileLoad">Load from file</button>
+          <button class="btn" type="button" id="fileSave">Save to file now</button>
+          <button class="btn" type="button" id="fileUnlink">Stop using this file</button>
+        </div>
+        <div class="acts fs-only">
+          <button class="btn" type="button" id="fileOpen">Open an events file…</button>
+          <button class="btn" type="button" id="fileCreate">Save events as a new file…</button>
+        </div>
+      </div>
+      <div class="file-row">
+        <div class="label"><span>Public holidays file</span><span id="holState"></span></div>
+        <p class="help" id="holInfo"></p>
+        <div class="acts">
+          <button class="btn fs-only" type="button" id="holOpen">Connect holidays file…</button>
+          <button class="btn fs-only" type="button" id="holReload">Reload from file</button>
+          <button class="btn fs-only" type="button" id="holUnlink">Disconnect</button>
+          <label class="btn filebtn">Load holidays JSON…<input type="file" id="holIn" accept=".json,application/json"></label>
+          <button class="btn" type="button" id="holDefault">Use built-in Czech holidays</button>
+        </div>
+      </div>
     </div>
-    <div class="actions" style="justify-content:flex-start">
-      <button class="btn" type="button" id="fileOpen">Open a data file…</button>
-      <button class="btn" type="button" id="fileCreate">Save calendar as a new data file…</button>
-    </div>
-    <p class="help">Choose your file once, e.g. C:\PRJ_NOVANTA\Calendar\calendar.json. The calendar remembers it: every change is saved to the file, and the file is loaded when you open the calendar. Your browser may ask once per visit to allow access – that's a browser security rule for local files.</p>
+    <p class="help">Choose each file once, e.g. C:\PRJ_NOVANTA\Calendar\calendar.json and C:\PRJ_NOVANTA\Calendar\czech-holidays.json. The calendar remembers them: every event change is saved to the events file, and both files are loaded when you open the calendar. The holidays file is only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.</p>
     <div class="actions"><button class="btn" type="button" id="fileClose">Close</button></div>
   </div>
 </dialog>
@@ -237,7 +261,7 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
 
 <script>
 (() => {
-const DEFAULT = {"name":"Czech public holidays","description":"Státní a ostatní svátky ČR (zákon č. 245/2000 Sb.).","events":[
+const DEFAULT_HOL = {"name":"Czech public holidays","description":"Státní a ostatní svátky ČR (zákon č. 245/2000 Sb.).","events":[
 {"id":"cz-0101","date":"01-01","title":"Den obnovy samostatného českého státu","note":"Restoration Day of the Independent Czech State · New Year's Day","type":"holiday"},
 {"id":"cz-good-friday","easter":-2,"title":"Velký pátek","note":"Good Friday","type":"holiday"},
 {"id":"cz-easter-monday","easter":1,"title":"Velikonoční pondělí","note":"Easter Monday","type":"holiday"},
@@ -265,67 +289,17 @@ const iso = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
 const now = new Date();
 const TODAY = iso(now.getFullYear(), now.getMonth(), now.getDate());
 
-let cal = null, year = now.getFullYear(), selected = TODAY, lang = "en", cache = {};
+/* cal = your events (the events file). hol = public holidays (their own file, read-only here). */
+let cal = null, hol = null, holSource = "built-in", year = now.getFullYear(), selected = TODAY, lang = "en", cache = {}, holSet = new WeakSet();
 
-/* ---------- persistence (same model as the change board) ----------
-   Inside Claude the calendar uses Claude's artifact storage. Opened as a local file, it keeps its data
-   in this browser's local storage, and (Edge/Chrome) can also save every change to a linked .json file. */
-const hasStorage = typeof window.storage !== "undefined";
-const LOCAL = (() => {
-  if (hasStorage) return null;
-  try { const k = "__cal_test"; window.localStorage.setItem(k, "1"); window.localStorage.removeItem(k); return window.localStorage; }
-  catch { return null; }
-})();
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 function recall(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
-function setSaveState(t) { $("saveState").textContent = t; }
 let toastTimer;
-function toast(t) { const el = $("toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 4000); }
-const today = () => TODAY;
-const snapshot = () => ({ name: cal.name, description: cal.description, events: cal.events });
-
-async function load() {
-  if (hasStorage) {
-    try { const r = await window.storage.get(KEY, false); if (r && r.value) { const v = JSON.parse(r.value); if (Array.isArray(v.events)) cal = v; } } catch (e) { /* key not created yet */ }
-    setSaveState("Saved"); return !!cal;
-  }
-  if (LOCAL) {
-    try { const v = JSON.parse(LOCAL.getItem(KEY) || "null"); if (v && Array.isArray(v.events)) cal = v; } catch {}
-    setSaveState("Saved in this browser"); return !!cal;
-  }
-  setSaveState("Not saved automatically – use Export backup"); return false;
-}
-async function save() {
-  cache = {}; render();
-  const text = JSON.stringify(snapshot());
-  if (hasStorage) {
-    try { setSaveState("Saving…"); const r = await window.storage.set(KEY, text, false); setSaveState(r ? "Saved" : "Save failed – export a backup"); }
-    catch (e) { setSaveState("Save failed – export a backup"); }
-    return;
-  }
-  if (LOCAL) {
-    try { LOCAL.setItem(KEY, text); setSaveState("Saved in this browser"); } catch { setSaveState("Save failed – export a backup"); }
-    fileChanged();
-  }
-}
-
-/* In-page yes/no dialog (works where confirm() is blocked) */
-function ask(title, text, yes, no) {
-  return new Promise(res => {
-    const d = $("askDlg");
-    $("askTitle").textContent = title; $("askText").textContent = text; $("askYes").textContent = yes; $("askNo").textContent = no;
-    const done = v => { d.close(); $("askYes").onclick = $("askNo").onclick = d.oncancel = null; res(v); };
-    $("askYes").onclick = () => done(true); $("askNo").onclick = () => done(false); d.oncancel = e => { e.preventDefault(); done(null); };
-    d.showModal(); $("askYes").focus();
-  });
-}
-
-function download(name, text, mime) {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([text], { type: mime }));
-  a.download = name; a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-}
+function toast(t) { const el = $("toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 4500); }
+function setSaveState(t) { $("saveState").textContent = t; }
+const evSnapshot = () => ({ name: cal.name || "My events", description: cal.description, events: cal.events });
+const holSnapshot = () => ({ name: hol.name, description: hol.description, events: hol.events });
 
 function easter(y) {
   const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4,
@@ -335,28 +309,34 @@ function easter(y) {
   return Date.UTC(y, mo - 1, da);
 }
 
-function normalize(obj) {
+function normalize(obj, defType) {
   const arr = Array.isArray(obj) ? obj : (obj && Array.isArray(obj.events) ? obj.events : null);
-  if (!arr) throw new Error('No "events" array found in the file.');
+  if (!arr) throw new Error('no "events" list found');
   let skipped = 0;
   const events = [];
   arr.forEach(e => {
     const okDate = typeof e?.date === "string" && /^(\d{4}-)?\d{2}-\d{2}$/.test(e.date);
     const okEaster = Number.isInteger(e?.easter);
     if (!e || typeof e.title !== "string" || !e.title.trim() || !(okDate || okEaster)) { skipped++; return; }
-    const ev = { id: e.id || "ev-" + Math.random().toString(36).slice(2, 10), title: e.title.trim(), type: TYPES[e.type] ? e.type : "other" };
+    const ev = { id: e.id || "ev-" + Math.random().toString(36).slice(2, 10), title: e.title.trim(), type: TYPES[e.type] ? e.type : (defType || "other") };
     if (okEaster) ev.easter = e.easter; else ev.date = e.date;
     if (e.note) ev.note = String(e.note);
     events.push(ev);
   });
   return { events, skipped };
 }
+function toHol(obj, fallbackName) {
+  const { events, skipped } = normalize(obj, "holiday");
+  return { hol: { name: obj.name || fallbackName || "Public holidays", description: obj.description, events }, skipped };
+}
 
+function invalidate() { cache = {}; holSet = new WeakSet(hol.events); }
+const isHol = e => holSet.has(e);
 function expand(y) {
   if (cache[y]) return cache[y];
   const map = {};
   const add = (k, e) => (map[k] ||= []).push(e);
-  cal.events.forEach(e => {
+  [...hol.events, ...cal.events].forEach(e => {
     if (Number.isInteger(e.easter)) {
       const t = new Date(easter(y) + e.easter * 864e5);
       if (t.getUTCFullYear() === y) add(iso(y, t.getUTCMonth(), t.getUTCDate()), e);
@@ -365,12 +345,11 @@ function expand(y) {
       if (new Date(Date.UTC(y, m - 1, d)).getUTCDate() === d) add(`${y}-${e.date}`, e);
     } else if (e.date.startsWith(y + "-")) add(e.date, e);
   });
-  Object.values(map).forEach(list => list.sort((a, b) => (a.type === "holiday" ? 0 : 1) - (b.type === "holiday" ? 0 : 1)));
   return cache[y] = map;
 }
 const eventsOn = d => expand(+d.slice(0, 4))[d] || [];
-const changed = () => save();
 
+/* ---------- rendering ---------- */
 function renderMonths() {
   const map = expand(year), T = L[lang];
   let html = "";
@@ -400,69 +379,124 @@ function renderMonths() {
   $("months").innerHTML = html;
   $("yearLbl").textContent = year;
 }
-
-function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 function fmt(d, opts) { const [y, m, dd] = d.split("-").map(Number); return new Intl.DateTimeFormat(L[lang].loc, { timeZone: "UTC", ...opts }).format(new Date(Date.UTC(y, m - 1, dd))); }
 function rule(e) { return Number.isInteger(e.easter) ? (e.easter === 0 ? "Easter Sunday" : `Easter ${e.easter > 0 ? "+" : "−"}${Math.abs(e.easter)} d`) : e.date.length === 5 ? "Every year" : "One-off"; }
-
 function renderDay() {
   const t = fmt(selected, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   $("dayTitle").textContent = t.charAt(0).toUpperCase() + t.slice(1);
-  const evs = eventsOn(selected);
+  const evs = [...eventsOn(selected)].sort((a, b) => isHol(b) - isHol(a));
   $("dayEvents").innerHTML = evs.length ? evs.map(e => `
     <li class="ev"><span class="bar" style="background:var(--t-${e.type})"></span>
-      <div><div class="t">${esc(e.title)}</div>${e.note ? `<div class="n">${esc(e.note)}</div>` : ""}<div class="meta">${TYPES[e.type]} · ${rule(e)}</div></div>
-      <button class="x" data-del="${esc(e.id)}" aria-label="Remove ${esc(e.title)}">Remove</button></li>`).join("")
+      <div><div class="t">${esc(e.title)}</div>${e.note ? `<div class="n">${esc(e.note)}</div>` : ""}<div class="meta">${isHol(e) ? `<span class="hol-tag">${esc(hol.name)}</span>` : TYPES[e.type]} · ${rule(e)}</div></div>
+      ${isHol(e) ? "" : `<button class="x" data-del="${esc(e.id)}" aria-label="Remove ${esc(e.title)}">Remove</button>`}</li>`).join("")
     : `<li class="empty">No events on this day.</li>`;
 }
-
 function renderUpcoming() {
   const items = [];
   [now.getFullYear(), now.getFullYear() + 1].forEach(y => Object.entries(expand(y)).forEach(([d, list]) => { if (d >= TODAY) list.forEach(e => items.push([d, e])); }));
   items.sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
   $("upcoming").innerHTML = items.slice(0, 8).map(([d, e]) => `<li><button data-go="${d}"><span class="d">${fmt(d, { day: "numeric", month: "short" })}</span><span class="t" title="${esc(e.title)}"><i style="display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;background:var(--t-${e.type})"></i>${esc(e.title)}</span></button></li>`).join("") || `<li class="empty">Nothing scheduled.</li>`;
 }
+function renderInfo() {
+  $("evInfo").textContent = `${cal.events.length} events` + (fileHandle ? ` · ${fileHandle.name}` : "");
+  $("holInfoShort").textContent = `${hol.events.length} holidays · ${hol.name}` + (holHandle ? ` (${holHandle.name})` : holSource === "built-in" ? " (built in)" : "");
+}
+function render() { renderMonths(); renderDay(); renderUpcoming(); renderInfo(); }
 
-function render() {
-  renderMonths(); renderDay(); renderUpcoming();
-  $("srcInfo").textContent = `${cal.events.length} events · ${cal.name || "Untitled calendar"}`;
+/* ---------- persistence (same model as the change board) ----------
+   Inside Claude the calendar uses Claude's artifact storage. Opened as a local file or from a server, it keeps
+   its data in this browser's local storage, and (Edge/Chrome) can also use linked .json files on your disk. */
+const hasStorage = typeof window.storage !== "undefined";
+const LOCAL = (() => {
+  if (hasStorage) return null;
+  try { const k = "__cal_test"; window.localStorage.setItem(k, "1"); window.localStorage.removeItem(k); return window.localStorage; }
+  catch { return null; }
+})();
+const packAll = () => JSON.stringify({ ...evSnapshot(), holidays: { ...holSnapshot(), source: holSource } });
+function unpackAll(v) {
+  if (!v || !Array.isArray(v.events)) return false;
+  if (v.holidays && Array.isArray(v.holidays.events)) {
+    cal = { name: v.name, description: v.description, events: v.events };
+    hol = { name: v.holidays.name, description: v.holidays.description, events: v.holidays.events }; holSource = v.holidays.source || "stored";
+  } else {   /* older version kept holidays among the events: move them out */
+    cal = { name: "My events", events: v.events.filter(e => !/^cz-/.test(e.id || "")) };
+  }
+  return true;
+}
+async function load() {
+  if (hasStorage) {
+    try { const r = await window.storage.get(KEY, false); if (r && r.value && unpackAll(JSON.parse(r.value))) { setSaveState("Saved"); return true; } } catch (e) {}
+    setSaveState("Saved"); return false;
+  }
+  if (LOCAL) {
+    let ok = false; try { ok = unpackAll(JSON.parse(LOCAL.getItem(KEY) || "null")); } catch {}
+    setSaveState("Saved in this browser"); return ok;
+  }
+  setSaveState("Not saved automatically – use Export backup"); return false;
+}
+async function persist() {
+  if (hasStorage) {
+    try { setSaveState("Saving…"); const r = await window.storage.set(KEY, packAll(), false); setSaveState(r ? "Saved" : "Save failed – export a backup"); }
+    catch (e) { setSaveState("Save failed – export a backup"); }
+    return;
+  }
+  if (LOCAL) { try { LOCAL.setItem(KEY, packAll()); if (!fileHandle) setSaveState("Saved in this browser"); } catch { setSaveState("Save failed – export a backup"); } }
+}
+/* events changed */
+async function save() { invalidate(); render(); await persist(); fileChanged(); }
+/* holidays changed (never written to any file) */
+async function saveHol() { invalidate(); render(); updateFileUI(); await persist(); }
+
+/* In-page yes/no dialog (works where confirm() is blocked). Resolves true / false / null (closed). */
+function ask(title, text, yes, no) {
+  return new Promise(res => {
+    const d = $("askDlg");
+    $("askTitle").textContent = title; $("askText").textContent = text; $("askYes").textContent = yes; $("askNo").textContent = no;
+    const done = v => { if (d.open) d.close(); $("askYes").onclick = $("askNo").onclick = d.oncancel = null; res(v); };
+    $("askYes").onclick = () => done(true); $("askNo").onclick = () => done(false); d.oncancel = e => { e.preventDefault(); done(null); };
+    d.showModal(); $("askYes").focus();
+  });
+}
+function download(name, text, mime) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: mime }));
+  a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
-// --- interactions ---
+/* ---------- interactions ---------- */
 $("months").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (b) { selected = b.dataset.d; renderMonths(); renderDay(); } });
 $("upcoming").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) { selected = b.dataset.go; year = +selected.slice(0, 4); renderMonths(); renderDay(); } });
 $("prevY").onclick = () => { year--; renderMonths(); };
 $("nextY").onclick = () => { year++; renderMonths(); };
 $("todayBtn").onclick = () => { year = now.getFullYear(); selected = TODAY; renderMonths(); renderDay(); };
 $("lang").onchange = e => { lang = e.target.value; store(KEY + "-lang", lang); render(); };
-
 $("dayEvents").addEventListener("click", e => {
   const b = e.target.closest("[data-del]"); if (!b) return;
   if (!b.classList.contains("armed")) { b.classList.add("armed"); b.textContent = "Confirm"; setTimeout(() => { b.classList.remove("armed"); b.textContent = "Remove"; }, 3000); return; }
-  cal.events = cal.events.filter(x => x.id !== b.dataset.del); changed();
+  cal.events = cal.events.filter(x => x.id !== b.dataset.del); save();
 });
-
 $("addForm").addEventListener("submit", e => {
   e.preventDefault();
   const title = $("fTitle").value.trim(); if (!title) return;
   const ev = { id: "ev-" + Date.now().toString(36), date: $("fRepeat").checked ? selected.slice(5) : selected, title, type: $("fType").value };
   const note = $("fNote").value.trim(); if (note) ev.note = note;
-  cal.events.push(ev); $("fTitle").value = ""; $("fNote").value = ""; $("fRepeat").checked = false; changed();
+  cal.events.push(ev); $("fTitle").value = ""; $("fNote").value = ""; $("fRepeat").checked = false; save();
 });
 
-/* ---------- import: picker and drag & drop ---------- */
+/* ---------- import events: picker and drag & drop ---------- */
 const evKey = x => (x.date || "E" + x.easter) + "|" + x.title;
 function mergeEvents(list) {
-  const seen = new Set(cal.events.map(evKey)); let added = 0;
-  list.forEach(x => { if (!seen.has(evKey(x))) { cal.events.push(x); seen.add(evKey(x)); added++; } });
-  return added;
+  const seen = new Set([...cal.events, ...hol.events].map(evKey)); let added = 0, dup = 0;
+  list.forEach(x => { if (seen.has(evKey(x))) { dup++; return; } cal.events.push(x); seen.add(evKey(x)); added++; });
+  return { added, dup };
 }
 async function importFile(file, mode) {
   let obj, res;
   try { obj = JSON.parse(await file.text()); res = normalize(obj); }
   catch (err) { toast(`${file.name} isn't a calendar file: ${err.message || "invalid JSON"}`); return null; }
-  if (mode === "add") return { added: mergeEvents(res.events), skipped: res.skipped };
-  const ok = await ask("Replace calendar?", `Replace the current ${cal.events.length} events with ${res.events.length} events from ${file.name}?`, "Replace", "Cancel");
+  if (mode === "add") return { ...mergeEvents(res.events), skipped: res.skipped };
+  const ok = await ask("Replace your events?", `Replace your ${cal.events.length} events with ${res.events.length} events from ${file.name}? Public holidays are not affected.`, "Replace", "Cancel");
   if (!ok) return null;
   cal = { name: obj.name || file.name.replace(/\.json$/i, ""), description: obj.description, events: res.events };
   return { replaced: res.events.length, skipped: res.skipped };
@@ -470,54 +504,63 @@ async function importFile(file, mode) {
 function reportImport(results) {
   const ok = results.filter(Boolean); if (!ok.length) return;
   save();
-  const sk = ok.reduce((n, r) => n + (r.skipped || 0), 0), skTxt = sk ? `, skipped ${sk} invalid` : "";
+  const sum = k => ok.reduce((n, r) => n + (r[k] || 0), 0);
+  const extra = (sum("dup") ? `, ${sum("dup")} already there` : "") + (sum("skipped") ? `, skipped ${sum("skipped")} invalid` : "");
   const rep = ok.find(r => r.replaced != null);
-  if (rep) return toast(`Calendar replaced with ${rep.replaced} events${skTxt}`);
-  toast(`Added ${ok.reduce((n, r) => n + r.added, 0)} events${skTxt}`);
+  toast(rep ? `Events replaced with ${rep.replaced} from the file${extra}` : `Added ${sum("added")} events${extra}`);
 }
 $("fileIn").addEventListener("change", async e => {
   const f = e.target.files[0]; if (!f) return;
   reportImport([await importFile(f, $("mergeChk").checked ? "add" : "replace")]);
   e.target.value = "";
 });
+
+/* Drop zone: shown only while a file is actually being dragged over the page.
+   dragover fires continuously during a drag, so if it stops (drag cancelled, dropped elsewhere,
+   Esc pressed) the overlay hides itself instead of getting stuck. */
 const isFileDrag = e => [...(e.dataTransfer?.types || [])].includes("Files");
-let dragDepth = 0;
-window.addEventListener("dragenter", e => { if (!isFileDrag(e)) return; dragDepth++; $("dropZone").hidden = false; });
-window.addEventListener("dragleave", e => { if (!isFileDrag(e)) return; if (--dragDepth <= 0) { dragDepth = 0; $("dropZone").hidden = true; } });
-window.addEventListener("dragover", e => { if (isFileDrag(e)) { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; } });
+let dropTimer = null;
+const hideDrop = () => { clearTimeout(dropTimer); $("dropZone").hidden = true; };
+const keepDrop = () => { $("dropZone").hidden = false; clearTimeout(dropTimer); dropTimer = setTimeout(hideDrop, 250); };
+window.addEventListener("dragenter", e => { if (isFileDrag(e)) keepDrop(); });
+window.addEventListener("dragover", e => { if (!isFileDrag(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; keepDrop(); });
+window.addEventListener("dragleave", e => { if (isFileDrag(e) && !e.relatedTarget) hideDrop(); });
+window.addEventListener("dragend", hideDrop);
+window.addEventListener("blur", hideDrop);
+$("dropZone").addEventListener("click", hideDrop);
 window.addEventListener("drop", async e => {
+  hideDrop();
   if (!isFileDrag(e)) return;
-  e.preventDefault(); dragDepth = 0; $("dropZone").hidden = true;
+  e.preventDefault();
   const files = [...e.dataTransfer.files].filter(f => /\.json$/i.test(f.name) || f.type === "application/json");
   if (!files.length) return toast("Drop .json calendar files");
   const results = []; for (const f of files) results.push(await importFile(f, "add"));
   reportImport(results);
 });
 
-$("resetBtn").onclick = async () => {
-  if (await ask("Reset to Czech holidays?", `This replaces all ${cal.events.length} current events with the 13 Czech public holidays.`, "Reset", "Cancel")) {
-    cal = structuredClone(DEFAULT); save(); toast("Calendar reset to Czech holidays");
-  }
+/* ---------- export ---------- */
+$("exportJson").onclick = () => {
+  download(`calendar-${TODAY}.json`, JSON.stringify(evSnapshot(), null, 2), "application/json");
+  if (hasStorage || window.self !== window.top) toast("If no download started, use View / copy JSON");
 };
-
-$("exportJson").onclick = () => download(`calendar-${today()}.json`, JSON.stringify(snapshot(), null, 2), "application/json");
-$("exportBtn").onclick = () => { $("expText").value = JSON.stringify(snapshot(), null, 2); $("copyMsg").textContent = ""; $("exportDlg").hidden = false; $("copyBtn").focus(); };
+$("exportBtn").onclick = () => { $("expText").value = JSON.stringify(evSnapshot(), null, 2); $("copyMsg").textContent = ""; $("exportDlg").hidden = false; $("copyBtn").focus(); };
 $("closeExp").onclick = () => { $("exportDlg").hidden = true; };
 $("exportDlg").addEventListener("click", e => { if (e.target.id === "exportDlg") $("exportDlg").hidden = true; });
-document.addEventListener("keydown", e => { if (e.key === "Escape") $("exportDlg").hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { $("exportDlg").hidden = true; hideDrop(); } });
 $("copyBtn").onclick = () => {
   const ta = $("expText");
   navigator.clipboard.writeText(ta.value).then(() => { $("copyMsg").textContent = "Copied"; })
     .catch(() => { ta.focus(); ta.select(); $("copyMsg").textContent = "Text selected, press Ctrl+C"; });
 };
 
-/* ---------- Data file (Edge/Chrome, calendar opened as a local file) ----------
-   The browser can't open a fixed path by itself. The user picks calendar.json once; the calendar keeps
-   the file handle in IndexedDB, saves every change to it and loads it on the next visit
-   (the browser may ask for permission once per visit). */
-const FS_OK = !hasStorage && "showOpenFilePicker" in window && "indexedDB" in window;
+/* ---------- Data files (Edge/Chrome, opened as a local file or from https/localhost) ----------
+   The browser can't open a fixed path by itself. The user picks each file once; the calendar keeps
+   the file handles in IndexedDB, saves every event change to the events file, reads the holidays file,
+   and loads both on the next visit (the browser may ask for permission once per visit). */
+const inFrame = (() => { try { return window.self !== window.top; } catch { return true; } })();
+const FS_OK = !hasStorage && !inFrame && "showOpenFilePicker" in window && "indexedDB" in window;
 const DIRTY_KEY = KEY + ":fileDirty";
-let fileHandle = null, filePerm = false, writeTimer = null;
+let fileHandle = null, filePerm = false, writeTimer = null, holHandle = null, holPerm = false;
 
 function idb(mode, fn) {
   return new Promise((res, rej) => {
@@ -537,29 +580,38 @@ const isDirty = () => { try { return LOCAL?.getItem(DIRTY_KEY) === "1"; } catch 
 const setDirty = v => { try { v ? LOCAL?.setItem(DIRTY_KEY, "1") : LOCAL?.removeItem(DIRTY_KEY); } catch {} };
 
 function updateFileUI() {
+  document.querySelectorAll(".fs-only").forEach(el => el.hidden = !FS_OK);
+  $("fsNote").textContent = FS_OK ? "" : (hasStorage || inFrame)
+    ? "Linking files on your disk works when the calendar is opened as its own page in Edge or Chrome (index.html from disk, https:// or localhost). Here you can still load a holidays JSON and import or copy your events."
+    : "This browser can't link files on your disk (use Edge or Chrome). You can still load a holidays JSON and import or export your events.";
+  $("saveNow").textContent = FS_OK && !fileHandle ? "Save to file…" : "Save";
+  $("saveNow").title = !FS_OK ? "Download a backup of your events (Ctrl+S)" : fileHandle ? `Save to ${fileHandle.name} (Ctrl+S)` : "Choose your calendar.json – only needed once (Ctrl+S)";
   const btn = $("fileBtn");
-  if (!FS_OK) { btn.hidden = true; return; }
-  btn.hidden = false;
-  $("saveNow").textContent = fileHandle ? "Save" : "Save to file…";
-  $("saveNow").title = fileHandle ? `Save to ${fileHandle.name} (Ctrl+S)` : "Choose your calendar.json – only needed once (Ctrl+S)";
-  btn.classList.toggle("linked", !!fileHandle && filePerm);
-  btn.classList.toggle("attention", !!fileHandle && !filePerm);
-  btn.textContent = !fileHandle ? "Data file…" : filePerm ? `File: ${fileHandle.name}` : `Reconnect ${fileHandle.name}`;
-  btn.title = !fileHandle ? "Use a .json file on your disk as the calendar's data" : filePerm ? "Changes are saved to this file" : "Click to allow access and load the file";
-  $("fileLinked").hidden = !fileHandle;
+  const needs = (fileHandle && !filePerm) || (holHandle && !holPerm);
+  btn.classList.toggle("linked", !!fileHandle && filePerm && (!holHandle || holPerm));
+  btn.classList.toggle("attention", !!needs);
+  btn.textContent = needs ? "Reconnect files" : fileHandle ? `File: ${fileHandle.name}` : "Data files…";
+  btn.title = needs ? "Click to allow access and load the files" : "Events file and public holidays file";
+  $("fileLinked").hidden = !FS_OK || !fileHandle;
+  $("evState").textContent = !fileHandle ? "not linked" : filePerm ? "linked" : "needs permission";
   $("fileInfo").textContent = !fileHandle
-    ? "The calendar isn't using a data file yet. It keeps its data in this browser only."
-    : filePerm ? `Using ${fileHandle.name}. Every change is saved to it.`
-               : `Using ${fileHandle.name}, but the browser needs your permission again. Click "Load from file".`;
+    ? "Your events aren't using a file yet. They are kept in this browser only."
+    : filePerm ? `Using ${fileHandle.name}. Every change is saved to it.` : `Using ${fileHandle.name}, but the browser needs your permission again. Click "Load from file".`;
+  $("holReload").hidden = $("holUnlink").hidden = !FS_OK || !holHandle;
+  $("holState").textContent = holHandle ? (holPerm ? "linked" : "needs permission") : holSource === "built-in" ? "built in" : "copy in browser";
+  $("holInfo").textContent = (holHandle
+    ? (holPerm ? `Using ${holHandle.name}, read each time you open the calendar.` : `Using ${holHandle.name}, but the browser needs your permission again. Click "Reload from file".`)
+    : holSource === "built-in" ? "Using the Czech public holidays built into the calendar (or czech-holidays.json next to it on a server)."
+    : `Using a copy of “${hol.name}” kept in this browser.`) + ` ${hol.events.length} entries.`;
   if (fileHandle && filePerm) setSaveState(isDirty() ? `Not saved to ${fileHandle.name} yet` : `Saved to ${fileHandle.name}`);
   else if (fileHandle) setSaveState(`Saved in this browser – reconnect ${fileHandle.name}`);
+  renderInfo();
 }
-async function askPermission() {
-  if (!fileHandle) return false;
-  const opts = { mode: "readwrite" };
-  try { filePerm = (await fileHandle.queryPermission(opts)) === "granted" || (await fileHandle.requestPermission(opts)) === "granted"; }
-  catch { filePerm = false; }
-  return filePerm;
+
+async function askPermission(h, mode) {
+  if (!h) return false;
+  const opts = { mode };
+  try { return (await h.queryPermission(opts)) === "granted" || (await h.requestPermission(opts)) === "granted"; } catch { return false; }
 }
 function parseCal(text, fallbackName) {
   const d = JSON.parse(text);
@@ -570,11 +622,11 @@ async function writeFile() {
   if (!fileHandle || !filePerm) return false;
   try {
     const w = await fileHandle.createWritable();
-    await w.write(JSON.stringify(snapshot(), null, 2)); await w.close();
+    await w.write(JSON.stringify(evSnapshot(), null, 2)); await w.close();
     setDirty(false); updateFileUI(); return true;
   } catch (e) { setDirty(true); setSaveState(`Couldn't save to ${fileHandle.name} – is it open elsewhere?`); return false; }
 }
-/* called by save() after every change */
+/* called by save() after every event change */
 function fileChanged() {
   if (!FS_OK || !fileHandle) return;
   setDirty(true);
@@ -582,43 +634,57 @@ function fileChanged() {
   setSaveState(`Saving to ${fileHandle.name}…`);
   clearTimeout(writeTimer); writeTimer = setTimeout(writeFile, 400);
 }
-/* Load the file into the calendar. If the calendar has changes the file doesn't have, ask first. */
+/* Load the events file. If the calendar has changes the file doesn't have, ask first. */
 async function loadFromFile() {
-  if (!(await askPermission())) { updateFileUI(); toast("Access to the file wasn't allowed"); return; }
+  filePerm = await askPermission(fileHandle, "readwrite");
+  if (!filePerm) { updateFileUI(); toast("Access to the events file wasn't allowed"); return; }
   let fromFile;
   try { fromFile = parseCal(await (await fileHandle.getFile()).text(), fileHandle.name); }
-  catch { updateFileUI(); toast(`${fileHandle.name} isn't a calendar file. Choose a file made with Export backup or "Save calendar as a new data file".`); return; }
+  catch { updateFileUI(); toast(`${fileHandle.name} isn't a calendar file. Choose a file made with Export backup or "Save events as a new file".`); return; }
   const same = JSON.stringify(fromFile.events) === JSON.stringify(cal.events);
   if (!same && isDirty() && cal.events.length) {
-    const keep = await ask("Unsaved changes", `The calendar has changes that aren't in ${fileHandle.name} yet.`, "Save calendar to the file", "Load the file, drop changes");
-    if (keep) { await writeFile(); toast(`Saved the calendar to ${fileHandle.name}`); return; }
+    const keep = await ask("Unsaved changes", `Your events have changes that aren't in ${fileHandle.name} yet.`, "Save events to the file", "Load the file, drop changes");
     if (keep === null) return updateFileUI();
+    if (keep) { await writeFile(); toast(`Saved your events to ${fileHandle.name}`); return; }
   }
-  cal = fromFile; cache = {};
-  try { LOCAL?.setItem(KEY, JSON.stringify(snapshot())); } catch {}
-  setDirty(false); render(); updateFileUI();
+  cal = fromFile; setDirty(false); invalidate(); render(); await persist(); updateFileUI();
   toast(`Loaded ${cal.events.length} events from ${fileHandle.name}`);
+}
+async function loadHolFromFile(quiet) {
+  holPerm = await askPermission(holHandle, "read");
+  if (!holPerm) { updateFileUI(); if (!quiet) toast("Access to the holidays file wasn't allowed"); return; }
+  try {
+    const f = await holHandle.getFile(), { hol: h, skipped } = toHol(JSON.parse(await f.text()), f.name.replace(/\.json$/i, ""));
+    hol = h; holSource = "file"; await saveHol();
+    if (!quiet) toast(`Loaded ${hol.events.length} holidays from ${holHandle.name}` + (skipped ? `, skipped ${skipped} invalid` : ""));
+  } catch { updateFileUI(); toast(`${holHandle.name} isn't a holidays file`); }
 }
 let rememberFailed = false;
 async function useHandle(h) { fileHandle = h; filePerm = false; rememberFailed = !(await idbSet("dataFile", h)); }
-async function initFile() {
-  if (!FS_OK) return;
+
+async function initFiles() {
+  if (!FS_OK) return updateFileUI();
   fileHandle = await idbGet("dataFile");
-  if (fileHandle) {
-    try { filePerm = (await fileHandle.queryPermission({ mode: "readwrite" })) === "granted"; } catch { filePerm = false; }
-    if (filePerm) await loadFromFile();
-  }
+  holHandle = await idbGet("holidaysFile");
+  if (holHandle) { try { holPerm = (await holHandle.queryPermission({ mode: "read" })) === "granted"; } catch { holPerm = false; } if (holPerm) await loadHolFromFile(true); }
+  if (fileHandle) { try { filePerm = (await fileHandle.queryPermission({ mode: "readwrite" })) === "granted"; } catch { filePerm = false; } if (filePerm) await loadFromFile(); }
   updateFileUI();
 }
-const jsonTypes = [{ description: "Calendar data", accept: { "application/json": [".json"] } }];
+
+const jsonTypes = [{ description: "Calendar JSON", accept: { "application/json": [".json"] } }];
 $("fileBtn").addEventListener("click", async () => {
-  if (fileHandle && !filePerm) { await loadFromFile(); return; }   // one-click reconnect
+  if (FS_OK && ((fileHandle && !filePerm) || (holHandle && !holPerm))) {   // one-click reconnect of both files
+    if (holHandle && !holPerm) await loadHolFromFile(false);
+    if (fileHandle && !filePerm) await loadFromFile();
+    return;
+  }
   updateFileUI(); $("fileDlg").showModal();
 });
 $("fileClose").onclick = () => $("fileDlg").close();
 $("fileLoad").addEventListener("click", async () => { $("fileDlg").close(); await loadFromFile(); });
 $("fileSave").addEventListener("click", async () => {
-  if (!(await askPermission())) return toast("Access to the file wasn't allowed");
+  filePerm = await askPermission(fileHandle, "readwrite");
+  if (!filePerm) return toast("Access to the file wasn't allowed");
   if (await writeFile()) toast(`Saved to ${fileHandle.name}`);
 });
 $("fileOpen").addEventListener("click", async () => {
@@ -631,42 +697,81 @@ $("fileCreate").addEventListener("click", async () => {
   try {
     const h = await window.showSaveFilePicker({ types: jsonTypes, id: "year-calendar", suggestedName: "calendar.json", startIn: fileHandle || "documents" });
     await useHandle(h); $("fileDlg").close();
-    if (await askPermission() && await writeFile())
-      toast(rememberFailed ? `Saved to ${h.name}. This browser can't remember the file, so you'll choose it again next visit.` : `Saved to ${h.name} – from now on Save writes straight to this file`);
+    filePerm = await askPermission(h, "readwrite");
+    if (filePerm && await writeFile())
+      toast(rememberFailed ? `Saved to ${h.name}. This browser can't remember the file, so you'll choose it again next visit.` : `Saved to ${h.name} – from now on every change is written to this file`);
   } catch (e) { if (e.name !== "AbortError") toast("Couldn't create that file."); }
 });
-/* One-button save (also Ctrl+S): to the linked file; first time, choose the file.
+$("fileUnlink").addEventListener("click", async () => {
+  await idbDel("dataFile"); fileHandle = null; filePerm = false; setDirty(false);
+  updateFileUI(); setSaveState("Saved in this browser");
+  toast("Your events no longer use a file. The file wasn't changed.");
+});
+
+/* holidays file */
+$("holOpen").addEventListener("click", async () => {
+  try {
+    const [h] = await window.showOpenFilePicker({ types: jsonTypes, id: "year-calendar-holidays", startIn: holHandle || "documents" });
+    holHandle = h; holPerm = false; await idbSet("holidaysFile", h);
+    await loadHolFromFile(false);
+  } catch (e) { if (e.name !== "AbortError") toast("Couldn't open that file."); }
+});
+$("holReload").addEventListener("click", () => loadHolFromFile(false));
+$("holUnlink").addEventListener("click", async () => {
+  await idbDel("holidaysFile"); holHandle = null; holPerm = false;
+  holSource = "stored"; await saveHol();
+  toast(`Disconnected. The last loaded holidays stay in this browser.`);
+});
+$("holIn").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const { hol: h, skipped } = toHol(JSON.parse(await f.text()), f.name.replace(/\.json$/i, ""));
+    if (holHandle) { await idbDel("holidaysFile"); holHandle = null; holPerm = false; }
+    hol = h; holSource = "stored"; await saveHol();
+    toast(`Loaded ${hol.events.length} holidays from ${f.name}` + (skipped ? `, skipped ${skipped} invalid` : ""));
+  } catch (err) { toast(`${f.name} isn't a holidays file: ${err.message || "invalid JSON"}`); }
+  e.target.value = "";
+});
+$("holDefault").addEventListener("click", async () => {
+  if (holHandle) { await idbDel("holidaysFile"); holHandle = null; holPerm = false; }
+  hol = await defaultHolidays(); holSource = "built-in"; await saveHol();
+  toast("Using the built-in Czech public holidays");
+});
+
+/* One-button save (also Ctrl+S): to the linked events file; first time, choose the file.
    Without file access (Firefox, or inside Claude), it downloads a backup instead. */
 async function saveNow() {
   if (!FS_OK) {
-    download(`calendar-${today()}.json`, JSON.stringify(snapshot(), null, 2), "application/json");
-    return toast(hasStorage ? "Your events are saved automatically here. A backup download was started." : "Downloaded a backup – this browser can't save to a chosen file");
+    download(`calendar-${TODAY}.json`, JSON.stringify(evSnapshot(), null, 2), "application/json");
+    return toast(hasStorage || inFrame ? "Events are saved automatically here. For a file, use View / copy JSON." : "Downloaded a backup – this browser can't save to a chosen file");
   }
   if (!fileHandle) return linkForSave();
-  if (!(await askPermission())) { updateFileUI(); return toast("Access to the file wasn't allowed"); }
+  filePerm = await askPermission(fileHandle, "readwrite");
+  if (!filePerm) { updateFileUI(); return toast("Access to the file wasn't allowed"); }
   if (await writeFile()) toast(`Saved to ${fileHandle.name}`);
 }
-/* First Save: pick the EXISTING calendar.json with an Open dialog and write the calendar into it. */
+/* First Save: pick the EXISTING calendar.json with an Open dialog and write the events into it. */
 async function linkForSave() {
   let h;
   try { [h] = await window.showOpenFilePicker({ types: jsonTypes, id: "year-calendar", startIn: "documents" }); }
   catch (e) {
-    if (e.name === "AbortError") toast("No file chosen. To create a new file, use Data file… → Save calendar as a new data file");
+    if (e.name === "AbortError") toast("No file chosen. To create a new file, use Data files… → Save events as a new file");
     else toast(`Couldn't open the file: ${e.message}`);
     return;
   }
   await useHandle(h);
-  if (!(await askPermission())) { updateFileUI(); return toast("Saving to the file wasn't allowed"); }
+  filePerm = await askPermission(h, "readwrite");
+  if (!filePerm) { updateFileUI(); return toast("Saving to the file wasn't allowed"); }
   let fileEvents = null;
   try { fileEvents = parseCal(await (await h.getFile()).text(), h.name).events; } catch { /* empty or not a calendar file: just overwrite */ }
-  if (fileEvents && fileEvents.length && !cal.events.length) { setDirty(false); return loadFromFile(); }   // empty calendar: never wipe the file
+  if (fileEvents && fileEvents.length && !cal.events.length) { setDirty(false); return loadFromFile(); }   // no events here: never wipe the file
   if (fileEvents && fileEvents.length && JSON.stringify(fileEvents) !== JSON.stringify(cal.events)) {
     const ok = await ask("Which version to keep?", `${h.name} has ${fileEvents.length} events, the calendar has ${cal.events.length}.`, "Save calendar into the file", "Load the file instead");
     if (ok === null) return updateFileUI();
     if (!ok) { setDirty(false); return loadFromFile(); }
   }
   if (await writeFile())
-    toast(rememberFailed ? `Saved to ${h.name}. This browser can't remember the file, so you'll choose it again next visit.` : `Saved to ${h.name} – from now on Save writes straight to this file`);
+    toast(rememberFailed ? `Saved to ${h.name}. This browser can't remember the file, so you'll choose it again next visit.` : `Saved to ${h.name} – from now on every change is written to this file`);
   updateFileUI();
 }
 $("saveNow").addEventListener("click", saveNow);
@@ -677,25 +782,20 @@ document.addEventListener("keydown", e => {
     saveNow();
   }
 });
-$("fileUnlink").addEventListener("click", async () => {
-  await idbDel("dataFile"); fileHandle = null; filePerm = false; setDirty(false);
-  $("fileDlg").close(); updateFileUI(); setSaveState("Saved in this browser");
-  toast("The calendar no longer uses a data file. Your file wasn't changed.");
-});
 
 $("legend").innerHTML = Object.entries(TYPES).map(([k, v]) => `<span><i style="background:var(--t-${k})"></i>${v}</span>`).join("");
 
-/* ---------- boot: saved calendar, else czech-holidays.json next to the page, else embedded copy ---------- */
+/* ---------- boot ---------- */
+async function defaultHolidays() {
+  try { const r = await fetch("czech-holidays.json", { cache: "no-cache" }); if (r.ok) return toHol(await r.json()).hol; } catch {}
+  return structuredClone(DEFAULT_HOL);
+}
 const savedLang = recall(KEY + "-lang"); if (L[savedLang]) { lang = savedLang; $("lang").value = lang; }
-load().then(async found => {
-  if (!found) {
-    cal = structuredClone(DEFAULT);
-    try {
-      const r = await fetch("czech-holidays.json");
-      if (r.ok) { const obj = await r.json(); cal = { name: obj.name, description: obj.description, events: normalize(obj).events }; }
-    } catch {}
-  }
-  cache = {}; render(); return initFile();
+load().then(async () => {
+  if (!cal) cal = { name: "My events", events: [] };
+  if (!hol || holSource === "built-in") { hol = await defaultHolidays(); holSource = "built-in"; }
+  invalidate(); render(); updateFileUI();
+  await initFiles();
 });
 })();
 </script>
