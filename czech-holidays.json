@@ -1,0 +1,19 @@
+{
+  "name": "Czech public holidays",
+  "description": "Státní a ostatní svátky ČR (zákon č. 245/2000 Sb.). Date formats: \"MM-DD\" repeats every year, \"YYYY-MM-DD\" is a single day, \"easter\": N is N days from Easter Sunday.",
+  "events": [
+    { "id": "cz-0101", "date": "01-01", "title": "Den obnovy samostatného českého státu", "note": "Restoration Day of the Independent Czech State · New Year's Day", "type": "holiday" },
+    { "id": "cz-good-friday", "easter": -2, "title": "Velký pátek", "note": "Good Friday", "type": "holiday" },
+    { "id": "cz-easter-monday", "easter": 1, "title": "Velikonoční pondělí", "note": "Easter Monday", "type": "holiday" },
+    { "id": "cz-0501", "date": "05-01", "title": "Svátek práce", "note": "Labour Day", "type": "holiday" },
+    { "id": "cz-0508", "date": "05-08", "title": "Den vítězství", "note": "Liberation Day", "type": "holiday" },
+    { "id": "cz-0705", "date": "07-05", "title": "Den slovanských věrozvěstů Cyrila a Metoděje", "note": "Saints Cyril and Methodius Day", "type": "holiday" },
+    { "id": "cz-0706", "date": "07-06", "title": "Den upálení mistra Jana Husa", "note": "Jan Hus Day", "type": "holiday" },
+    { "id": "cz-0928", "date": "09-28", "title": "Den české státnosti", "note": "St. Wenceslas Day (Czech Statehood Day)", "type": "holiday" },
+    { "id": "cz-1028", "date": "10-28", "title": "Den vzniku samostatného československého státu", "note": "Independent Czechoslovak State Day", "type": "holiday" },
+    { "id": "cz-1117", "date": "11-17", "title": "Den boje za svobodu a demokracii", "note": "Struggle for Freedom and Democracy Day · International Students' Day", "type": "holiday" },
+    { "id": "cz-1224", "date": "12-24", "title": "Štědrý den", "note": "Christmas Eve", "type": "holiday" },
+    { "id": "cz-1225", "date": "12-25", "title": "1. svátek vánoční", "note": "Christmas Day", "type": "holiday" },
+    { "id": "cz-1226", "date": "12-26", "title": "2. svátek vánoční", "note": "St. Stephen's Day", "type": "holiday" }
+  ]
+}
