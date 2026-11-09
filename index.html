@@ -28,6 +28,9 @@
   color-scheme: dark }
 
 * { box-sizing: border-box }
+[hidden] { display: none !important }   /* hidden elements stay hidden even where a class sets display */
+html { -webkit-text-size-adjust: 100% }
+body { margin: 0 }
 body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 14px; line-height: 1.45;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px }
 .wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 20px }
