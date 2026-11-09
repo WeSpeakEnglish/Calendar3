@@ -59,6 +59,7 @@ header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; ju
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent) }
 .btn.armed { background: var(--sun); border-color: var(--sun); color: var(--on-accent) }
 select.btn { padding-right: 8px }
+.yearnav .pick { margin-left: 4px }
 .filebtn { position: relative }
 .filebtn input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none }
 .filebtn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px }
@@ -206,14 +207,14 @@ dialog::backdrop { background: rgb(30 20 10 / .45) }
         <button type="button" id="vYear" aria-pressed="true" data-i18n="viewYear">Year</button>
         <button type="button" id="vMonth" aria-pressed="false" data-i18n="viewMonth">Month</button>
       </div>
+      <select class="btn pick" id="lang" data-i18n-aria="language" aria-label="Language"></select>
+      <select class="btn pick" id="palette" data-i18n-aria="palette" data-i18n-title="palette" aria-label="Colours"></select>
     </div>
     <div class="tools">
       <span class="save-state" id="saveState"></span>
       <button class="btn primary" id="saveNow">Save</button>
       <button class="btn fs-only" id="saveAs" data-i18n="saveAs" data-i18n-title="saveAsTitle">Save as…</button>
       <button class="btn" id="fileBtn">Data files…</button>
-      <select class="btn" id="lang" data-i18n-aria="language" aria-label="Language"></select>
-      <select class="btn" id="palette" data-i18n-aria="palette" data-i18n-title="palette" aria-label="Colours"></select>
       <label class="btn filebtn"><span data-i18n="importEvents">Import events…</span><input type="file" id="fileIn" accept=".json,application/json"></label>
       <button class="btn" id="exportJson" data-i18n="exportBackup">Export backup</button>
       <button class="btn" id="exportBtn" data-i18n="viewJson">View / copy JSON</button>
