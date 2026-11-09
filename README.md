@@ -15,12 +15,12 @@ Keep all three in one folder, for example `C:\PRJ\Calendar\`.
 ## First-time setup
 
 1. Open `index.html` in **Edge or Chrome**.
-2. Click **Data files…**.
-3. Under **Events file**, click **Open an events file…** and choose `calendar.json`. Allow editing when the browser asks.
-4. Under **Public holidays file**, click **Connect holidays file…** and choose `czech-holidays.json`.
-5. Close the dialog.
+2. Click **Save**. A Save-as window opens with `calendar.json` suggested. Keep the name or type your own, choose the folder, and save. Allow editing when the browser asks.
+3. Click **Data files…**. Under **Public holidays file**, click **Connect holidays file…** and choose `czech-holidays.json`.
 
-The calendar remembers both files. On later visits it loads them automatically. If the browser needs permission again, the button turns amber and reads **Reconnect files**. One click reconnects both files.
+The calendar remembers the file you last saved to and loads it the next time you open the calendar. It also remembers the holidays file. If the browser needs permission again, the button turns amber and reads **Reconnect files**. One click reconnects both files.
+
+To use an events file you already have instead, click **Data files…** → **Open an events file…**.
 
 Without this setup the calendar still works. Events are kept in the browser and the built-in Czech holidays are used.
 
@@ -28,7 +28,8 @@ Without this setup the calendar still works. Events are kept in the browser and 
 
 - **Add an event:** click a day, fill in the title (and optionally a note and type), tick **Every year** for a yearly event, then click **Add to this day**.
 - **Remove an event:** click **Remove** next to it, then **Confirm**. Holidays can't be removed here; edit `czech-holidays.json` instead.
-- **Save:** changes go to `calendar.json` automatically. **Save** (or **Ctrl+S**) writes immediately.
+- **Save** (Ctrl+S): every change is already written to your events file automatically; **Save** writes immediately. The first time, it asks for a name and location (`calendar.json` is suggested).
+- **Save as…** (Ctrl+Shift+S): save your events under another name or in another folder. From then on, that file is the one that's remembered, saved to and loaded on the next visit. The previous file stays as it was.
 - **Year and language:** use the arrows next to the year and **Today** to move around. The language menu switches month and weekday names between English, Czech and Russian.
 - **Coming up** lists the next eight events and holidays. Click one to jump to it.
 
@@ -36,7 +37,7 @@ Without this setup the calendar still works. Events are kept in the browser and 
 
 - **Import events…** reads a JSON file. With the checkbox ticked, the file's events are added and duplicates are skipped. Untick the checkbox to replace your events.
 - **Drag and drop** one or more `.json` files onto the page. Their events are always added, never replaced.
-- **Export backup** downloads your events as `calendar-YYYY-MM-DD.json`.
+- **Export backup** downloads a dated copy of your events, `calendar-YYYY-MM-DD.json`, to your Downloads folder. Unlike **Save** and **Save as…**, it doesn't change which file the calendar uses.
 - **View / copy JSON** shows your events as text you can copy. Use this inside the Claude viewer, where downloads don't work.
 
 None of these touch the holidays.

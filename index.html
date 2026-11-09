@@ -148,6 +148,7 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
     <div class="tools">
       <span class="save-state" id="saveState"></span>
       <button class="btn primary" id="saveNow" title="Save events (Ctrl+S)">Save</button>
+      <button class="btn fs-only" id="saveAs" title="Save events under another name or location (Ctrl+Shift+S)">Save as…</button>
       <button class="btn" id="fileBtn">Data files…</button>
       <select class="btn" id="lang" aria-label="Language">
         <option value="en">English</option>
@@ -228,7 +229,7 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
         </div>
         <div class="acts fs-only">
           <button class="btn" type="button" id="fileOpen">Open an events file…</button>
-          <button class="btn" type="button" id="fileCreate">Save events as a new file…</button>
+          <button class="btn" type="button" id="fileCreate">Save events as…</button>
         </div>
       </div>
       <div class="file-row">
@@ -243,7 +244,7 @@ dialog::backdrop { background: rgb(0 0 0 / .45) }
         </div>
       </div>
     </div>
-    <p class="help">Choose each file once, e.g. C:\PRJ_NOVANTA\Calendar\calendar.json and C:\PRJ_NOVANTA\Calendar\czech-holidays.json. The calendar remembers them: every event change is saved to the events file, and both files are loaded when you open the calendar. The holidays file is only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.</p>
+    <p class="help">Choose each file once, e.g. C:\PRJ\Calendar\calendar.json and C:\PRJ\Calendar\czech-holidays.json. The calendar remembers them: every event change is saved to the events file, and both files are loaded when you open the calendar. The holidays file is only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.</p>
     <div class="actions"><button class="btn" type="button" id="fileClose">Close</button></div>
   </div>
 </dialog>
@@ -588,7 +589,8 @@ function updateFileUI() {
     ? "Linking files on your disk works when the calendar is opened as its own page in Edge or Chrome (index.html from disk, https:// or localhost). Here you can still load a holidays JSON and import or copy your events."
     : "This browser can't link files on your disk (use Edge or Chrome). You can still load a holidays JSON and import or export your events.";
   $("saveNow").textContent = FS_OK && !fileHandle ? "Save to file…" : "Save";
-  $("saveNow").title = !FS_OK ? "Download a backup of your events (Ctrl+S)" : fileHandle ? `Save to ${fileHandle.name} (Ctrl+S)` : "Choose your calendar.json – only needed once (Ctrl+S)";
+  $("saveAs").title = fileHandle ? `Save under another name or location – currently ${fileHandle.name} (Ctrl+Shift+S)` : "Save events under a name and location you choose (Ctrl+Shift+S)";
+  $("saveNow").title = !FS_OK ? "Download a backup of your events (Ctrl+S)" : fileHandle ? `Save to ${fileHandle.name} (Ctrl+S)` : "Choose where to save – calendar.json is suggested, only needed once (Ctrl+S)";
   const btn = $("fileBtn");
   const needs = (fileHandle && !filePerm) || (holHandle && !holPerm);
   btn.classList.toggle("linked", !!fileHandle && filePerm && (!holHandle || holPerm));
@@ -643,7 +645,7 @@ async function loadFromFile() {
   if (!filePerm) { updateFileUI(); toast("Access to the events file wasn't allowed"); return; }
   let fromFile;
   try { fromFile = parseCal(await (await fileHandle.getFile()).text(), fileHandle.name); }
-  catch { updateFileUI(); toast(`${fileHandle.name} isn't a calendar file. Choose a file made with Export backup or "Save events as a new file".`); return; }
+  catch { updateFileUI(); toast(`${fileHandle.name} isn't a calendar file. Choose a file made with Export backup or "Save as…".`); return; }
   const same = JSON.stringify(fromFile.events) === JSON.stringify(cal.events);
   if (!same && isDirty() && cal.events.length) {
     const keep = await ask("Unsaved changes", `Your events have changes that aren't in ${fileHandle.name} yet.`, "Save events to the file", "Load the file, drop changes");
@@ -696,15 +698,7 @@ $("fileOpen").addEventListener("click", async () => {
     await useHandle(h); $("fileDlg").close(); await loadFromFile();
   } catch (e) { if (e.name !== "AbortError") toast("Couldn't open that file."); }
 });
-$("fileCreate").addEventListener("click", async () => {
-  try {
-    const h = await window.showSaveFilePicker({ types: jsonTypes, id: "year-calendar", suggestedName: "calendar.json", startIn: fileHandle || "documents" });
-    await useHandle(h); $("fileDlg").close();
-    filePerm = await askPermission(h, "readwrite");
-    if (filePerm && await writeFile())
-      toast(rememberFailed ? `Saved to ${h.name}. This browser can't remember the file, so you'll choose it again next visit.` : `Saved to ${h.name} – from now on every change is written to this file`);
-  } catch (e) { if (e.name !== "AbortError") toast("Couldn't create that file."); }
-});
+$("fileCreate").addEventListener("click", saveAs);
 $("fileUnlink").addEventListener("click", async () => {
   await idbDel("dataFile"); fileHandle = null; filePerm = false; setDirty(false);
   updateFileUI(); setSaveState("Saved in this browser");
@@ -741,48 +735,56 @@ $("holDefault").addEventListener("click", async () => {
   toast("Using the built-in Czech public holidays");
 });
 
-/* One-button save (also Ctrl+S): to the linked events file; first time, choose the file.
+/* Save (Ctrl+S): write to the remembered events file. First time, a Save-as window opens
+   with "calendar.json" suggested; any name and folder can be chosen.
+   Save as… (Ctrl+Shift+S): choose another name/location; that file is remembered from then on.
    Without file access (Firefox, or inside Claude), it downloads a backup instead. */
 async function saveNow() {
   if (!FS_OK) {
     download(`calendar-${TODAY}.json`, JSON.stringify(evSnapshot(), null, 2), "application/json");
     return toast(hasStorage || inFrame ? "Events are saved automatically here. For a file, use View / copy JSON." : "Downloaded a backup – this browser can't save to a chosen file");
   }
-  if (!fileHandle) return linkForSave();
+  if (!fileHandle) return saveAs();
   filePerm = await askPermission(fileHandle, "readwrite");
   if (!filePerm) { updateFileUI(); return toast("Access to the file wasn't allowed"); }
   if (await writeFile()) toast(`Saved to ${fileHandle.name}`);
 }
-/* First Save: pick the EXISTING calendar.json with an Open dialog and write the events into it. */
-async function linkForSave() {
-  let h;
-  try { [h] = await window.showOpenFilePicker({ types: jsonTypes, id: "year-calendar", startIn: "documents" }); }
+async function pickSaveTarget() {
+  const suggestedName = fileHandle?.name || "calendar.json";
+  try { return await window.showSaveFilePicker({ types: jsonTypes, id: "year-calendar", suggestedName, startIn: fileHandle || "documents" }); }
   catch (e) {
-    if (e.name === "AbortError") toast("No file chosen. To create a new file, use Data files… → Save events as a new file");
-    else toast(`Couldn't open the file: ${e.message}`);
-    return;
+    if (e.name === "AbortError") return null;
+    /* Some Windows setups refuse the Save-as window when replacing a file: pick the existing file instead */
+    toast("The Save-as window failed – choose the existing file to save into");
+    try { return (await window.showOpenFilePicker({ types: jsonTypes, id: "year-calendar", startIn: fileHandle || "documents" }))[0]; }
+    catch (e2) { if (e2.name !== "AbortError") toast(`Couldn't open the file: ${e2.message}`); return null; }
   }
-  await useHandle(h);
-  filePerm = await askPermission(h, "readwrite");
-  if (!filePerm) { updateFileUI(); return toast("Saving to the file wasn't allowed"); }
+}
+async function saveAs() {
+  if (!FS_OK) return saveNow();
+  const h = await pickSaveTarget();
+  if (!h) return;
+  filePerm = false;
+  if (!(await askPermission(h, "readwrite"))) { updateFileUI(); return toast("Saving to the file wasn't allowed"); }
   let fileEvents = null;
-  try { fileEvents = parseCal(await (await h.getFile()).text(), h.name).events; } catch { /* empty or not a calendar file: just overwrite */ }
-  if (fileEvents && fileEvents.length && !cal.events.length) { setDirty(false); return loadFromFile(); }   // no events here: never wipe the file
-  if (fileEvents && fileEvents.length && JSON.stringify(fileEvents) !== JSON.stringify(cal.events)) {
-    const ok = await ask("Which version to keep?", `${h.name} has ${fileEvents.length} events, the calendar has ${cal.events.length}.`, "Save calendar into the file", "Load the file instead");
-    if (ok === null) return updateFileUI();
-    if (!ok) { setDirty(false); return loadFromFile(); }
+  try { fileEvents = parseCal(await (await h.getFile()).text(), h.name).events; } catch { /* new or empty file */ }
+  if (fileEvents && fileEvents.length && !cal.events.length) {   // nothing here: never wipe a file that has events
+    await useHandle(h); filePerm = true; setDirty(false); return loadFromFile();
   }
+  await useHandle(h); filePerm = true;
+  $("fileDlg").open && $("fileDlg").close();
   if (await writeFile())
-    toast(rememberFailed ? `Saved to ${h.name}. This browser can't remember the file, so you'll choose it again next visit.` : `Saved to ${h.name} – from now on every change is written to this file`);
+    toast(rememberFailed ? `Saved to ${h.name}. This browser can't remember the file, so you'll choose it again next visit.`
+                         : `Saved to ${h.name} – it's remembered and loaded next time`);
   updateFileUI();
 }
 $("saveNow").addEventListener("click", saveNow);
+$("saveAs").addEventListener("click", saveAs);
 document.addEventListener("keydown", e => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
     e.preventDefault();
     if (document.querySelector("dialog[open]")) return;
-    saveNow();
+    e.shiftKey ? saveAs() : saveNow();
   }
 });
 
