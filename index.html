@@ -208,6 +208,7 @@ dialog::backdrop { background: rgb(30 20 10 / .45) }
         <button type="button" id="vMonth" aria-pressed="false" data-i18n="viewMonth">Month</button>
       </div>
       <select class="btn pick" id="lang" data-i18n-aria="language" aria-label="Language"></select>
+      <select class="btn pick" id="holSel" data-i18n-aria="holidaysSel" data-i18n-title="holidaysSel" aria-label="Public holidays"></select>
       <select class="btn pick" id="palette" data-i18n-aria="palette" data-i18n-title="palette" aria-label="Colours"></select>
     </div>
     <div class="tools">
@@ -316,8 +317,8 @@ dialog::backdrop { background: rgb(30 20 10 / .45) }
 <script>
 (() => {
 /* Built-in copies, used until the separate JSON files are connected (filled in from the .json files at build time) */
-const DEFAULT_HOL = {"name": "Czech public holidays", "description": "Státní a ostatní svátky ČR (zákon č. 245/2000 Sb.). Date formats: \"MM-DD\" repeats every year, \"YYYY-MM-DD\" is a single day, \"easter\": N is N days from Easter Sunday.", "events": [{"id": "cz-0101", "date": "01-01", "title": "Den obnovy samostatného českého státu", "note": "Restoration Day of the Independent Czech State · New Year's Day", "type": "holiday"}, {"id": "cz-good-friday", "easter": -2, "title": "Velký pátek", "note": "Good Friday", "type": "holiday"}, {"id": "cz-easter-monday", "easter": 1, "title": "Velikonoční pondělí", "note": "Easter Monday", "type": "holiday"}, {"id": "cz-0501", "date": "05-01", "title": "Svátek práce", "note": "Labour Day", "type": "holiday"}, {"id": "cz-0508", "date": "05-08", "title": "Den vítězství", "note": "Liberation Day", "type": "holiday"}, {"id": "cz-0705", "date": "07-05", "title": "Den slovanských věrozvěstů Cyrila a Metoděje", "note": "Saints Cyril and Methodius Day", "type": "holiday"}, {"id": "cz-0706", "date": "07-06", "title": "Den upálení mistra Jana Husa", "note": "Jan Hus Day", "type": "holiday"}, {"id": "cz-0928", "date": "09-28", "title": "Den české státnosti", "note": "St. Wenceslas Day (Czech Statehood Day)", "type": "holiday"}, {"id": "cz-1028", "date": "10-28", "title": "Den vzniku samostatného československého státu", "note": "Independent Czechoslovak State Day", "type": "holiday"}, {"id": "cz-1117", "date": "11-17", "title": "Den boje za svobodu a demokracii", "note": "Struggle for Freedom and Democracy Day · International Students' Day", "type": "holiday"}, {"id": "cz-1224", "date": "12-24", "title": "Štědrý den", "note": "Christmas Eve", "type": "holiday"}, {"id": "cz-1225", "date": "12-25", "title": "1. svátek vánoční", "note": "Christmas Day", "type": "holiday"}, {"id": "cz-1226", "date": "12-26", "title": "2. svátek vánoční", "note": "St. Stephen's Day", "type": "holiday"}]};
-const BUILTIN_TR = {"name": "Calendar translations", "languages": {"en": {"name": "English", "locale": "en-GB", "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "weekdays": ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], "ui": {"prevYear": "Previous year", "nextYear": "Next year", "today": "Today", "save": "Save", "saveToFile": "Save to file…", "saveAs": "Save as…", "saveTitleDownload": "Download a backup of your events (Ctrl+S)", "saveTitleLinked": "Save to {name} (Ctrl+S)", "saveTitleFirst": "Choose where to save – calendar.json is suggested, only needed once (Ctrl+S)", "saveAsTitle": "Save events under another name or location (Ctrl+Shift+S)", "dataFiles": "Data files…", "reconnectFiles": "Reconnect files", "fileBtnLinked": "File: {name}", "dataFilesTip": "Events, holidays, translations and colours files", "reconnectTip": "Click to allow access and load the files", "language": "Language", "importEvents": "Import events…", "exportBackup": "Export backup", "viewJson": "View / copy JSON", "mergeLabel": "Import adds to current events (untick to replace)", "dropTip": "Tip: drop .json files anywhere to add their events.", "evCount": "{n} events", "holCount": "{n} holidays · {name}", "builtIn": "built in", "yearCalendar": "Year calendar", "selectedDay": "Selected day", "noEvents": "No events on this day.", "addEvent": "Add event", "title": "Title", "titlePh": "e.g. Design review", "note": "Note (optional)", "type": "Type", "everyYear": "Every year", "addToDay": "Add to this day", "remove": "Remove", "confirm": "Confirm", "comingUp": "Coming up", "nothingScheduled": "Nothing scheduled.", "type_holiday": "Holiday", "type_personal": "Personal", "type_work": "Work", "type_birthday": "Birthday", "type_other": "Other", "ruleYearly": "Every year", "ruleOnce": "One-off", "ruleEaster": "Easter Sunday", "ruleEasterOffset": "Easter {offset} d", "exportTitle": "Events JSON", "exportHelpHtml": "This is your events file (public holidays are kept in their own file). Save the text as a <code>.json</code> file and load it with <b>Import events…</b>. Dates: <code>\"MM-DD\"</code> repeats yearly, <code>\"YYYY-MM-DD\"</code> is a single day, <code>\"easter\": -2</code> counts days from Easter Sunday. Types: holiday, personal, work, birthday, other.", "copy": "Copy", "close": "Close", "copied": "Copied", "copyFallback": "Text selected, press Ctrl+C", "dataFilesTitle": "Data files", "eventsFile": "Events file", "holidaysFile": "Public holidays file", "translationsFile": "Translations file", "stNotLinked": "not linked", "stLinked": "linked", "stNeedsPerm": "needs permission", "stBuiltIn": "built in", "stStored": "copy in browser", "evInfoNone": "Your events aren't using a file yet. They are kept in this browser only.", "evInfoLinked": "Using {name}. Every change is saved to it.", "evInfoPerm": "Using {name}, but the browser needs your permission again. Click \"Load from file\".", "loadFromFile": "Load from file", "saveToFileNow": "Save to file now", "stopUsingFile": "Stop using this file", "openEventsFile": "Open an events file…", "saveEventsAs": "Save events as…", "connectFile": "Connect file…", "reloadFromFile": "Reload from file", "disconnect": "Disconnect", "loadJson": "Load JSON…", "useBuiltIn": "Use built-in", "srcLinked": "Using {name}, read each time you open the calendar.", "srcPerm": "Using {name}, but the browser needs your permission again. Click \"Reload from file\".", "srcBuiltIn": "Using the built-in copy (or {file} next to the calendar on a server).", "srcStored": "Using a copy of “{name}” kept in this browser.", "entries": "{n} entries.", "dataFilesHelp": "Choose each file once, e.g. C:\\PRJ\\Calendar\\calendar.json. The calendar remembers them: every event change is saved to the events file, and all files are loaded when you open the calendar. The holidays, translations and colours files are only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.", "fsNoteFrame": "Linking files on your disk works when the calendar is opened as its own page in Edge or Chrome (index.html from disk, https:// or localhost). Here you can still load JSON files and import or copy your events.", "fsNoteBrowser": "This browser can't link files on your disk (use Edge or Chrome). You can still load JSON files and import or export your events.", "askReplaceTitle": "Replace your events?", "askReplaceText": "Replace your {n} events with {m} events from {file}? Public holidays are not affected.", "replace": "Replace", "cancel": "Cancel", "unsavedTitle": "Unsaved changes", "unsavedText": "Your events have changes that aren't in {name} yet.", "saveEventsToFile": "Save events to the file", "loadDropChanges": "Load the file, drop changes", "dropTitle": "Drop to add events", "dropSub": "Nothing in the calendar is removed", "stateSaved": "Saved", "stateSavedBrowser": "Saved in this browser", "stateSaving": "Saving…", "stateSaveFailed": "Save failed – export a backup", "stateNoAuto": "Not saved automatically – use Export backup", "stateNotSavedTo": "Not saved to {name} yet", "stateSavedTo": "Saved to {name}", "stateSavingTo": "Saving to {name}…", "stateReconnect": "Saved in this browser – reconnect {name}", "stateCantSave": "Couldn't save to {name} – is it open elsewhere?", "tNotCalFile": "{file} isn't a calendar file: {err}", "tInvalidJson": "invalid JSON", "tReplaced": "Events replaced with {n} from the file", "tAdded": "Added {n} events", "tDup": ", {n} already there", "tSkipped": ", skipped {n} invalid", "tDropJson": "Drop .json calendar files", "tNoDownload": "If no download started, use View / copy JSON", "tSavedAuto": "Events are saved automatically here. For a file, use View / copy JSON.", "tDownloaded": "Downloaded a backup – this browser can't save to a chosen file", "tAccessDenied": "Access to the file wasn't allowed", "tNotEventsFile": "{name} isn't a calendar file. Choose a file made with Export backup or Save as…", "tSavedEventsTo": "Saved your events to {name}", "tLoadedEvents": "Loaded {n} events from {name}", "tLoadedSource": "Loaded {name}: {n} entries", "tNotSourceFile": "{name} isn't a valid file for this", "tSavedTo": "Saved to {name}", "tSavedRemembered": "Saved to {name} – it's remembered and loaded next time", "tCantRemember": "Saved to {name}. This browser can't remember the file, so you'll choose it again next visit.", "tCouldntOpen": "Couldn't open that file.", "tUnlinked": "Your events no longer use a file. The file wasn't changed.", "tDisconnected": "Disconnected. The last loaded copy stays in this browser.", "tUsingBuiltIn": "Using the built-in copy", "tSaveAsFailed": "The Save-as window failed – choose the existing file to save into", "tSaveDenied": "Saving to the file wasn't allowed", "delete": "Delete", "deleteConfirm": "Delete?", "tDeleted": "Deleted “{title}”", "undo": "Undo", "tRestored": "Restored “{title}”", "holidayReadOnly": "Public holiday – edit the holidays file to change it", "view": "View", "viewYear": "Year", "viewMonth": "Month", "prevMonth": "Previous month", "nextMonth": "Next month", "openMonth": "Open {month}", "more": "+{n} more", "palette": "Colours", "themeFile": "Colours file"}}}};
+const DEFAULT_HOL = {"name": "Public holidays", "default": "cz", "sets": {"cz": {"name": {"en": "Czech Republic", "cs": "Česko", "ru": "Чехия"}, "description": "Státní a ostatní svátky ČR (zákon č. 245/2000 Sb.). Date formats: \"MM-DD\" repeats every year, \"YYYY-MM-DD\" is a single day, \"easter\": N is N days from Easter Sunday.", "events": [{"id": "cz-0101", "date": "01-01", "title": "Den obnovy samostatného českého státu", "note": "Restoration Day of the Independent Czech State · New Year's Day", "type": "holiday"}, {"id": "cz-good-friday", "easter": -2, "title": "Velký pátek", "note": "Good Friday", "type": "holiday"}, {"id": "cz-easter-monday", "easter": 1, "title": "Velikonoční pondělí", "note": "Easter Monday", "type": "holiday"}, {"id": "cz-0501", "date": "05-01", "title": "Svátek práce", "note": "Labour Day", "type": "holiday"}, {"id": "cz-0508", "date": "05-08", "title": "Den vítězství", "note": "Liberation Day", "type": "holiday"}, {"id": "cz-0705", "date": "07-05", "title": "Den slovanských věrozvěstů Cyrila a Metoděje", "note": "Saints Cyril and Methodius Day", "type": "holiday"}, {"id": "cz-0706", "date": "07-06", "title": "Den upálení mistra Jana Husa", "note": "Jan Hus Day", "type": "holiday"}, {"id": "cz-0928", "date": "09-28", "title": "Den české státnosti", "note": "St. Wenceslas Day (Czech Statehood Day)", "type": "holiday"}, {"id": "cz-1028", "date": "10-28", "title": "Den vzniku samostatného československého státu", "note": "Independent Czechoslovak State Day", "type": "holiday"}, {"id": "cz-1117", "date": "11-17", "title": "Den boje za svobodu a demokracii", "note": "Struggle for Freedom and Democracy Day · International Students' Day", "type": "holiday"}, {"id": "cz-1224", "date": "12-24", "title": "Štědrý den", "note": "Christmas Eve", "type": "holiday"}, {"id": "cz-1225", "date": "12-25", "title": "1. svátek vánoční", "note": "Christmas Day", "type": "holiday"}, {"id": "cz-1226", "date": "12-26", "title": "2. svátek vánoční", "note": "St. Stephen's Day", "type": "holiday"}]}}};
+const BUILTIN_TR = {"name": "Calendar translations", "languages": {"en": {"name": "English", "locale": "en-GB", "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "weekdays": ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], "ui": {"prevYear": "Previous year", "nextYear": "Next year", "today": "Today", "save": "Save", "saveToFile": "Save to file…", "saveAs": "Save as…", "saveTitleDownload": "Download a backup of your events (Ctrl+S)", "saveTitleLinked": "Save to {name} (Ctrl+S)", "saveTitleFirst": "Choose where to save – calendar.json is suggested, only needed once (Ctrl+S)", "saveAsTitle": "Save events under another name or location (Ctrl+Shift+S)", "dataFiles": "Data files…", "reconnectFiles": "Reconnect files", "fileBtnLinked": "File: {name}", "dataFilesTip": "Events, holidays, translations and colours files", "reconnectTip": "Click to allow access and load the files", "language": "Language", "importEvents": "Import events…", "exportBackup": "Export backup", "viewJson": "View / copy JSON", "mergeLabel": "Import adds to current events (untick to replace)", "dropTip": "Tip: drop .json files anywhere to add their events.", "evCount": "{n} events", "holCount": "{n} holidays · {name}", "builtIn": "built in", "yearCalendar": "Year calendar", "selectedDay": "Selected day", "noEvents": "No events on this day.", "addEvent": "Add event", "title": "Title", "titlePh": "e.g. Design review", "note": "Note (optional)", "type": "Type", "everyYear": "Every year", "addToDay": "Add to this day", "remove": "Remove", "confirm": "Confirm", "comingUp": "Coming up", "nothingScheduled": "Nothing scheduled.", "type_holiday": "Holiday", "type_personal": "Personal", "type_work": "Work", "type_birthday": "Birthday", "type_other": "Other", "ruleYearly": "Every year", "ruleOnce": "One-off", "ruleEaster": "Easter Sunday", "ruleEasterOffset": "Easter {offset} d", "exportTitle": "Events JSON", "exportHelpHtml": "This is your events file (public holidays are kept in their own file). Save the text as a <code>.json</code> file and load it with <b>Import events…</b>. Dates: <code>\"MM-DD\"</code> repeats yearly, <code>\"YYYY-MM-DD\"</code> is a single day, <code>\"easter\": -2</code> counts days from Easter Sunday. Types: holiday, personal, work, birthday, other.", "copy": "Copy", "close": "Close", "copied": "Copied", "copyFallback": "Text selected, press Ctrl+C", "dataFilesTitle": "Data files", "eventsFile": "Events file", "holidaysFile": "Public holidays file", "translationsFile": "Translations file", "stNotLinked": "not linked", "stLinked": "linked", "stNeedsPerm": "needs permission", "stBuiltIn": "built in", "stStored": "copy in browser", "evInfoNone": "Your events aren't using a file yet. They are kept in this browser only.", "evInfoLinked": "Using {name}. Every change is saved to it.", "evInfoPerm": "Using {name}, but the browser needs your permission again. Click \"Load from file\".", "loadFromFile": "Load from file", "saveToFileNow": "Save to file now", "stopUsingFile": "Stop using this file", "openEventsFile": "Open an events file…", "saveEventsAs": "Save events as…", "connectFile": "Connect file…", "reloadFromFile": "Reload from file", "disconnect": "Disconnect", "loadJson": "Load JSON…", "useBuiltIn": "Use built-in", "srcLinked": "Using {name}, read each time you open the calendar.", "srcPerm": "Using {name}, but the browser needs your permission again. Click \"Reload from file\".", "srcBuiltIn": "Using the built-in copy (or {file} next to the calendar on a server).", "srcStored": "Using a copy of “{name}” kept in this browser.", "entries": "{n} entries.", "dataFilesHelp": "Choose each file once, e.g. C:\\PRJ\\Calendar\\calendar.json. The calendar remembers them: every event change is saved to the events file, and all files are loaded when you open the calendar. The holidays, translations and colours files are only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.", "fsNoteFrame": "Linking files on your disk works when the calendar is opened as its own page in Edge or Chrome (index.html from disk, https:// or localhost). Here you can still load JSON files and import or copy your events.", "fsNoteBrowser": "This browser can't link files on your disk (use Edge or Chrome). You can still load JSON files and import or export your events.", "askReplaceTitle": "Replace your events?", "askReplaceText": "Replace your {n} events with {m} events from {file}? Public holidays are not affected.", "replace": "Replace", "cancel": "Cancel", "unsavedTitle": "Unsaved changes", "unsavedText": "Your events have changes that aren't in {name} yet.", "saveEventsToFile": "Save events to the file", "loadDropChanges": "Load the file, drop changes", "dropTitle": "Drop to add events", "dropSub": "Nothing in the calendar is removed", "stateSaved": "Saved", "stateSavedBrowser": "Saved in this browser", "stateSaving": "Saving…", "stateSaveFailed": "Save failed – export a backup", "stateNoAuto": "Not saved automatically – use Export backup", "stateNotSavedTo": "Not saved to {name} yet", "stateSavedTo": "Saved to {name}", "stateSavingTo": "Saving to {name}…", "stateReconnect": "Saved in this browser – reconnect {name}", "stateCantSave": "Couldn't save to {name} – is it open elsewhere?", "tNotCalFile": "{file} isn't a calendar file: {err}", "tInvalidJson": "invalid JSON", "tReplaced": "Events replaced with {n} from the file", "tAdded": "Added {n} events", "tDup": ", {n} already there", "tSkipped": ", skipped {n} invalid", "tDropJson": "Drop .json calendar files", "tNoDownload": "If no download started, use View / copy JSON", "tSavedAuto": "Events are saved automatically here. For a file, use View / copy JSON.", "tDownloaded": "Downloaded a backup – this browser can't save to a chosen file", "tAccessDenied": "Access to the file wasn't allowed", "tNotEventsFile": "{name} isn't a calendar file. Choose a file made with Export backup or Save as…", "tSavedEventsTo": "Saved your events to {name}", "tLoadedEvents": "Loaded {n} events from {name}", "tLoadedSource": "Loaded {name}: {n} entries", "tNotSourceFile": "{name} isn't a valid file for this", "tSavedTo": "Saved to {name}", "tSavedRemembered": "Saved to {name} – it's remembered and loaded next time", "tCantRemember": "Saved to {name}. This browser can't remember the file, so you'll choose it again next visit.", "tCouldntOpen": "Couldn't open that file.", "tUnlinked": "Your events no longer use a file. The file wasn't changed.", "tDisconnected": "Disconnected. The last loaded copy stays in this browser.", "tUsingBuiltIn": "Using the built-in copy", "tSaveAsFailed": "The Save-as window failed – choose the existing file to save into", "tSaveDenied": "Saving to the file wasn't allowed", "delete": "Delete", "deleteConfirm": "Delete?", "tDeleted": "Deleted “{title}”", "undo": "Undo", "tRestored": "Restored “{title}”", "holidayReadOnly": "Public holiday – edit the holidays file to change it", "view": "View", "viewYear": "Year", "viewMonth": "Month", "prevMonth": "Previous month", "nextMonth": "Next month", "openMonth": "Open {month}", "more": "+{n} more", "palette": "Colours", "themeFile": "Colours file", "holidaysSel": "Public holidays", "noHolidays": "No holidays", "observed": "observed", "ruleNth": "Every year"}}}};
 const BUILTIN_THEME = {"name": "Calendar colours", "default": "cosy", "palettes": {"cosy": {"name": "Cosy", "light": {"bg": "#f3ede4", "surface": "#fffaf4", "surface2": "#f8f0e5", "ink": "#2f2925", "muted": "#7c7066", "line": "#e8ddcf", "heading": "#9b2f45", "sun": "#b8324b", "accent": "#3f6b57", "accentSoft": "#e1ebe2", "onAccent": "#fffaf4", "holiday": "#b8324b", "personal": "#3a6ea5", "work": "#3f8a5f", "birthday": "#b87314", "other": "#7d5ba6"}, "dark": {"bg": "#1c1916", "surface": "#26221e", "surface2": "#2c2723", "ink": "#efe6db", "muted": "#a99c8f", "line": "#3a332c", "heading": "#eb93a3", "sun": "#f0899a", "accent": "#8fc2a6", "accentSoft": "#2b3a31", "onAccent": "#1c1916", "holiday": "#f0899a", "personal": "#82afe3", "work": "#85c9a0", "birthday": "#e8b062", "other": "#bba0e6"}}}};
 
 const TYPES = ["holiday", "personal", "work", "birthday", "other"];
@@ -329,17 +330,20 @@ const now = new Date();
 const TODAY = iso(now.getFullYear(), now.getMonth(), now.getDate());
 
 /* cal = your events (read/write file). SRC = read-only files: public holidays and translations. */
-let cal = null, view = "year", month = now.getMonth(), year = now.getFullYear(), selected = TODAY, lang = "en", cache = {}, holSet = new WeakSet();
+let cal = null, view = "year", month = now.getMonth(), year = now.getFullYear(), selected = TODAY, lang = "en", cache = {}, holSet = new WeakSet(), holKey = null;
 const SRC = {
-  hol: { label: "holidaysFile", idb: "holidaysFile", file: "czech-holidays.json", builtin: DEFAULT_HOL,
-         parse: (obj, fn) => toHol(obj, fn), count: d => d.events.length, data: null, source: "built-in", handle: null, perm: false },
+  hol: { label: "holidaysFile", idb: "holidaysFile", file: "holidays.json", builtin: DEFAULT_HOL,
+         parse: (obj, fn) => toHol(obj, fn), count: d => Object.values(d.sets).reduce((n, s) => n + s.events.length, 0), data: null, source: "built-in", handle: null, perm: false },
   tr:  { label: "translationsFile", idb: "translationsFile", file: "translations.json", builtin: BUILTIN_TR,
          parse: (obj, fn) => ({ data: toTr(obj, fn), skipped: 0 }), count: d => Object.keys(d.languages).length, data: null, source: "built-in", handle: null, perm: false },
   th:  { label: "themeFile", idb: "themeFile", file: "theme.json", builtin: BUILTIN_THEME,
          parse: (obj, fn) => ({ data: toTheme(obj, fn), skipped: 0 }), count: d => Object.keys(d.palettes).length, data: null, source: "built-in", handle: null, perm: false }
 };
 let palette = null;
-const hol = () => SRC.hol.data;
+/* the active holiday set (or an empty one for "No holidays") */
+const NO_HOL = { name: "", events: [] };
+const hol = () => SRC.hol.data?.sets?.[holKey] || NO_HOL;
+const nameOf = n => n && typeof n === "object" ? (n[lang] || n.en || Object.values(n)[0] || "") : (n || "");
 
 function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -446,20 +450,43 @@ function normalize(obj, defType) {
   arr.forEach(e => {
     const okDate = typeof e?.date === "string" && /^(\d{4}-)?\d{2}-\d{2}$/.test(e.date);
     const okEaster = Number.isInteger(e?.easter);
-    if (!e || typeof e.title !== "string" || !e.title.trim() || !(okDate || okEaster)) { skipped++; return; }
+    const okNth = Number.isInteger(e?.month) && e.month >= 1 && e.month <= 12 && WD.includes(e?.weekday) && Number.isInteger(e?.nth) && e.nth !== 0 && Math.abs(e.nth) <= 5;
+    if (!e || typeof e.title !== "string" || !e.title.trim() || !(okDate || okEaster || okNth)) { skipped++; return; }
     const ev = { id: e.id || "ev-" + Math.random().toString(36).slice(2, 10), title: e.title.trim(), type: TYPES.includes(e.type) ? e.type : (defType || "other") };
-    if (okEaster) ev.easter = e.easter; else ev.date = e.date;
+    if (okEaster) ev.easter = e.easter; else if (okDate) ev.date = e.date; else { ev.month = e.month; ev.weekday = e.weekday; ev.nth = e.nth; }
+    if (e.observed === true && okDate && e.date.length === 5) ev.observed = true;
     if (e.note) ev.note = String(e.note);
     events.push(ev);
   });
   return { events, skipped };
 }
+/* holidays.json holds several sets ("sets": {cz: {...}, ru: {...}}); a plain file with "events" is one set */
 function toHol(obj, fallbackName) {
-  const { events, skipped } = normalize(obj, "holiday");
-  return { data: { name: obj.name || fallbackName || "Public holidays", description: obj.description, events }, skipped };
+  const raw = obj && typeof obj.sets === "object" ? obj.sets : { main: { name: obj?.name || fallbackName, description: obj?.description, events: obj?.events } };
+  const sets = {}; let skipped = 0;
+  for (const [k, s] of Object.entries(raw)) {
+    try { const r = normalize(s, "holiday"); sets[k] = { name: s.name || k, description: s.description, events: r.events }; skipped += r.skipped; } catch {}
+  }
+  if (!Object.keys(sets).length) throw new Error("no holidays found");
+  return { data: { name: (typeof obj.sets === "object" && obj.name) || fallbackName || "Public holidays", description: obj.description,
+                   default: sets[obj.default] ? obj.default : Object.keys(sets)[0], sets }, skipped };
+}
+function buildHolSelect() {
+  const d = SRC.hol.data;
+  if (holKey !== "" && !d.sets[holKey]) holKey = d.default;
+  $("holSel").innerHTML = Object.entries(d.sets).map(([k, s]) => `<option value="${esc(k)}">${esc(nameOf(s.name))}</option>`).join("")
+    + `<option value="">${esc(t("noHolidays"))}</option>`;
+  $("holSel").value = holKey;
 }
 
 function invalidate() { cache = {}; holSet = new WeakSet(hol().events); }
+const WD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+/* nth weekday of a month (nth = -1 is the last one); returns the day of month or 0 */
+function nthWeekday(y, m, wd, n) {
+  const days = new Date(Date.UTC(y, m, 0)).getUTCDate(), w = WD.indexOf(wd);
+  if (n > 0) { const first = (new Date(Date.UTC(y, m - 1, 1)).getUTCDay() + 6) % 7; const d = 1 + (w - first + 7) % 7 + (n - 1) * 7; return d <= days ? d : 0; }
+  const last = (new Date(Date.UTC(y, m - 1, days)).getUTCDay() + 6) % 7; const d = days - (last - w + 7) % 7 + (n + 1) * 7; return d >= 1 ? d : 0;
+}
 const isHol = e => holSet.has(e);
 function expand(y) {
   if (cache[y]) return cache[y];
@@ -469,9 +496,20 @@ function expand(y) {
     if (Number.isInteger(e.easter)) {
       const d = new Date(easter(y) + e.easter * 864e5);
       if (d.getUTCFullYear() === y) add(iso(y, d.getUTCMonth(), d.getUTCDate()), e);
+    } else if (e.weekday) {
+      const d = nthWeekday(y, e.month, e.weekday, e.nth); if (d) add(iso(y, e.month - 1, d), e);
     } else if (e.date.length === 5) {
       const [m, d] = e.date.split("-").map(Number);
       if (new Date(Date.UTC(y, m - 1, d)).getUTCDate() === d) add(`${y}-${e.date}`, e);
+      if (e.observed) for (const yy of [y, y + 1]) {   /* Saturday → Friday before, Sunday → Monday after (may cross the year) */
+        const dt = new Date(Date.UTC(yy, m - 1, d)), dow = dt.getUTCDay(), shift = dow === 6 ? -1 : dow === 0 ? 1 : 0;
+        if (!shift) continue;
+        const o = new Date(dt.getTime() + shift * 864e5);
+        if (o.getUTCFullYear() !== y) continue;
+        const copy = { ...e, title: `${e.title} (${t("observed")})`, observed: false };
+        if (isHol(e)) holSet.add(copy);
+        add(iso(y, o.getUTCMonth(), o.getUTCDate()), copy);
+      }
     } else if (e.date.startsWith(y + "-")) add(e.date, e);
   });
   return cache[y] = map;
@@ -543,6 +581,7 @@ function renderMonthView() {
 }
 function fmt(d, opts) { const [y, m, dd] = d.split("-").map(Number); try { return new Intl.DateTimeFormat(L().locale, { timeZone: "UTC", ...opts }).format(new Date(Date.UTC(y, m - 1, dd))); } catch { return d; } }
 function rule(e) {
+  if (e.weekday) return t("ruleNth");
   if (Number.isInteger(e.easter)) return e.easter === 0 ? t("ruleEaster") : t("ruleEasterOffset", { offset: (e.easter > 0 ? "+" : "−") + Math.abs(e.easter) });
   return e.date.length === 5 ? t("ruleYearly") : t("ruleOnce");
 }
@@ -552,7 +591,7 @@ function renderDay() {
   const evs = [...eventsOn(selected)].sort((a, b) => isHol(b) - isHol(a));
   $("dayEvents").innerHTML = evs.length ? evs.map(e => `
     <li class="ev"><span class="bar" style="background:var(--t-${e.type})"></span>
-      <div><div class="t">${esc(e.title)}</div>${e.note ? `<div class="n">${esc(e.note)}</div>` : ""}<div class="meta">${isHol(e) ? `<span class="hol-tag">${esc(hol().name)}</span>` : esc(t("type_" + e.type))} · ${esc(rule(e))}</div></div>
+      <div><div class="t">${esc(e.title)}</div>${e.note ? `<div class="n">${esc(e.note)}</div>` : ""}<div class="meta">${isHol(e) ? `<span class="hol-tag">${esc(nameOf(hol().name))}</span>` : esc(t("type_" + e.type))} · ${esc(rule(e))}</div></div>
       ${isHol(e) ? `<span class="lock" title="${esc(t("holidayReadOnly"))}" aria-label="${esc(t("holidayReadOnly"))}">${LOCK}</span>`
         : `<button class="del" data-del="${esc(e.id)}" aria-label="${esc(t("delete"))}: ${esc(e.title)}">${BIN}<span>${esc(t("delete"))}</span></button>`}</li>`).join("")
     : `<li class="empty">${esc(t("noEvents"))}</li>`;
@@ -566,7 +605,8 @@ function renderUpcoming() {
 function renderInfo() {
   $("evInfo").textContent = t("evCount", { n: cal.events.length }) + (fileHandle ? ` · ${fileHandle.name}` : "");
   const h = SRC.hol;
-  $("holInfoShort").textContent = t("holCount", { n: h.data.events.length, name: h.data.name }) + (h.handle ? ` (${h.handle.name})` : h.source === "built-in" ? ` (${t("builtIn")})` : "");
+  $("holInfoShort").textContent = !holKey ? t("noHolidays")
+    : t("holCount", { n: hol().events.length, name: nameOf(hol().name) }) + (h.handle ? ` (${h.handle.name})` : h.source === "built-in" ? ` (${t("builtIn")})` : "");
 }
 function render() { renderMonths(); renderDay(); renderUpcoming(); renderInfo(); }
 function rerenderAll() { applyI18n(); render(); updateFileUI(); if (saveStateKey) setSaveState(saveStateKey, saveStateVars); }
@@ -586,9 +626,9 @@ const packAll = () => JSON.stringify({ ...evSnapshot(),
   theme: { data: SRC.th.data, source: SRC.th.source } });
 function unpackAll(v) {
   if (!v || !Array.isArray(v.events)) return false;
-  if (v.holidays && Array.isArray(v.holidays.events)) {
+  if (v.holidays && (v.holidays.sets || Array.isArray(v.holidays.events))) {
     cal = { name: v.name, description: v.description, events: v.events };
-    SRC.hol.data = { name: v.holidays.name, description: v.holidays.description, events: v.holidays.events }; SRC.hol.source = v.holidays.source || "stored";
+    try { SRC.hol.data = toHol(v.holidays).data; SRC.hol.source = v.holidays.source || "stored"; } catch {}
   } else {   /* older version kept holidays among the events: move them out */
     cal = { name: "My events", events: v.events.filter(e => !/^cz-/.test(e.id || "")) };
   }
@@ -620,6 +660,7 @@ async function save() { invalidate(); render(); await persist(); fileChanged(); 
 /* a read-only file changed (holidays or translations); never written to any file */
 async function saveSrc(k) {
   if (k === "tr") buildLangSelect();
+  if (k === "hol") buildHolSelect();
   if (k === "th") { buildPaletteSelect(); applyTheme(); }
   invalidate(); rerenderAll(); await persist();
 }
@@ -661,7 +702,8 @@ $("nextY").onclick = () => step(1);
 $("todayBtn").onclick = () => goTo(TODAY);
 $("vYear").onclick = () => { view = "year"; renderMonths(); };
 $("vMonth").onclick = () => { view = "month"; if (+selected.slice(0, 4) === year) month = +selected.slice(5, 7) - 1; renderMonths(); };
-$("lang").onchange = e => { lang = e.target.value; store(KEY + "-lang", lang); rerenderAll(); };
+$("lang").onchange = e => { lang = e.target.value; store(KEY + "-lang", lang); buildHolSelect(); invalidate(); rerenderAll(); };
+$("holSel").onchange = e => { holKey = e.target.value; store(KEY + "-holset", holKey); invalidate(); render(); };
 $("palette").onchange = e => { palette = e.target.value; store(KEY + "-palette", palette); applyTheme(); };
 /* Delete: first click arms the button ("Delete?"), second click deletes. The message offers Undo. */
 $("dayEvents").addEventListener("click", e => {
@@ -994,11 +1036,12 @@ document.addEventListener("keydown", e => {
 
 /* ---------- boot ---------- */
 const savedLang = recall(KEY + "-lang"); if (typeof savedLang === "string") lang = savedLang;
+const savedHol = recall(KEY + "-holset"); if (typeof savedHol === "string") holKey = savedHol;
 const savedPal = recall(KEY + "-palette"); if (typeof savedPal === "string") palette = savedPal;
 load().then(async () => {
   if (!cal) cal = { name: "My events", events: [] };
   for (const k of Object.keys(SRC)) if (!SRC[k].data || SRC[k].source === "built-in") { SRC[k].data = await defaultSrc(k); SRC[k].source = "built-in"; }
-  buildLangSelect(); buildPaletteSelect(); applyTheme(); invalidate(); rerenderAll();
+  buildLangSelect(); buildHolSelect(); buildPaletteSelect(); applyTheme(); invalidate(); rerenderAll();
   await initFiles();
 });
 })();

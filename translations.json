@@ -171,7 +171,11 @@
         "openMonth": "Open {month}",
         "more": "+{n} more",
         "palette": "Colours",
-        "themeFile": "Colours file"
+        "themeFile": "Colours file",
+        "holidaysSel": "Public holidays",
+        "noHolidays": "No holidays",
+        "observed": "observed",
+        "ruleNth": "Every year"
       }
     },
     "cs": {
@@ -343,7 +347,11 @@
         "openMonth": "Otevřít {month}",
         "more": "+{n} další",
         "palette": "Barvy",
-        "themeFile": "Soubor barev"
+        "themeFile": "Soubor barev",
+        "holidaysSel": "Státní svátky",
+        "noHolidays": "Bez svátků",
+        "observed": "náhradní volno",
+        "ruleNth": "Každý rok"
       }
     },
     "ru": {
@@ -515,7 +523,11 @@
         "openMonth": "Открыть: {month}",
         "more": "ещё {n}",
         "palette": "Цвета",
-        "themeFile": "Файл цветов"
+        "themeFile": "Файл цветов",
+        "holidaysSel": "Праздники",
+        "noHolidays": "Без праздников",
+        "observed": "перенос",
+        "ruleNth": "Каждый год"
       }
     }
   }

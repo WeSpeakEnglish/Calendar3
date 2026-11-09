@@ -8,7 +8,7 @@ A year-at-a-glance calendar in the classic wall-calendar layout. Each month show
 |---|---|---|
 | `index.html` | The calendar itself. Open it in Edge or Chrome. | – |
 | `calendar.json` | Your events | Yes, every change is saved to it |
-| `czech-holidays.json` | Czech public holidays (13 entries) | No, it is only read |
+| `holidays.json` | Public holidays: Czech Republic, Russia, United States | No, it is only read |
 | `translations.json` | Interface texts: English, Czech, Russian | No, it is only read |
 | `theme.json` | Colour palettes: Cosy, Classic, Forest, Lavender | No, it is only read |
 
@@ -18,7 +18,7 @@ Keep all five in one folder, for example `C:\PRJ\Calendar\`.
 
 1. Open `index.html` in **Edge or Chrome**.
 2. Click **Save**. A Save-as window opens with `calendar.json` suggested. Keep the name or type your own, choose the folder, and save. Allow editing when the browser asks.
-3. Click **Data files…**. Under **Public holidays file**, click **Connect file…** and choose `czech-holidays.json`.
+3. Click **Data files…**. Under **Public holidays file**, click **Connect file…** and choose `holidays.json`.
 4. Under **Translations file**, click **Connect file…** and choose `translations.json`.
 5. Under **Colours file**, click **Connect file…** and choose `theme.json`.
 
@@ -28,12 +28,12 @@ To use an events file you already have instead, click **Data files…** → **Op
 
 Without this setup the calendar still works. Events are kept in the browser, the built-in Czech holidays are used, the interface is in English only, and only the Cosy colours are available.
 
-When the calendar is served from a web server, `czech-holidays.json`, `translations.json` and `theme.json` next to `index.html` are loaded automatically, so steps 3–5 aren't needed. When `index.html` is opened directly from disk, browsers don't let a page read neighbouring files on its own, so connect them once.
+When the calendar is served from a web server, `holidays.json`, `translations.json` and `theme.json` next to `index.html` are loaded automatically, so steps 3–5 aren't needed. When `index.html` is opened directly from disk, browsers don't let a page read neighbouring files on its own, so connect them once.
 
 ## Everyday use
 
 - **Add an event:** click a day, fill in the title (and optionally a note and type), tick **Every year** for a yearly event, then click **Add to this day**.
-- **Delete an event:** click a day, then **Delete** next to the event, then **Delete?** to confirm. The message that appears has **Undo**, which brings the event back. Holidays show a lock instead and can't be deleted here; edit `czech-holidays.json` instead.
+- **Delete an event:** click a day, then **Delete** next to the event, then **Delete?** to confirm. The message that appears has **Undo**, which brings the event back. Holidays show a lock instead and can't be deleted here; edit `holidays.json` instead.
 - **Save** (Ctrl+S): every change is already written to your events file automatically; **Save** writes immediately. The first time, it asks for a name and location (`calendar.json` is suggested).
 - **Save as…** (Ctrl+Shift+S): save your events under another name or in another folder. From then on, that file is the one that's remembered, saved to and loaded on the next visit. The previous file stays as it was.
 - **Year and month view:** the calendar opens in the year view. Switch with **Year | Month** next to **Today**, or click a month's name in the year view to open it. The month view shows each day as a box with its events. Click a faded day to jump to the neighbouring month.
@@ -60,7 +60,29 @@ The **Public holidays file**, **Translations file** and **Colours file** rows ha
 - **Load JSON…** loads a file once and keeps a copy in the browser. This works in every browser.
 - **Use built-in** returns to the default: Czech holidays, English-only texts, and the Cosy colours. On a server, the files next to `index.html` are used instead.
 
-To use another country's holidays, make a file in the same format and connect it instead.
+## Public holidays
+
+Pick the country in the holidays menu next to the language and colours menus: **Czech Republic**, **Russia**, **United States**, or **No holidays**. Your choice is remembered in the browser.
+
+All sets live in `holidays.json` under `"sets"`. To add a country, add a block with a short key, a `name` and its `events`:
+
+```json
+"sets": {
+  "de": {
+    "name": { "en": "Germany", "cs": "Německo", "ru": "Германия" },
+    "events": [
+      { "id": "de-1003", "date": "10-03", "title": "Tag der Deutschen Einheit", "note": "German Unity Day", "type": "holiday" }
+    ]
+  }
+}
+```
+
+- `name` can be one text or one text per language code.
+- `"default"` at the top picks the set new users see first.
+- Besides `"MM-DD"`, `"YYYY-MM-DD"` and `"easter"`, holidays can use **"nth weekday of a month"**: `"month": 11, "weekday": "Thu", "nth": 4` is Thanksgiving. `"nth": -1` is the last one, e.g. Memorial Day is `"month": 5, "weekday": "Mon", "nth": -1`. Weekdays are `Mon` … `Sun`.
+- `"observed": true` (for `"MM-DD"` dates) also marks the day off when the date falls on a weekend: Saturday → the Friday before, Sunday → the Monday after. The US set uses it.
+- Russian weekend transfers are decided by government decree each year, so they aren't in the file; add them as `"YYYY-MM-DD"` events if you need them.
+- An older file with just `"events"` (like the earlier `czech-holidays.json`) still works as a single set.
 
 ## Translations
 
@@ -129,7 +151,7 @@ All colours live in `theme.json`. Each palette has `light` colours and `dark` co
 
 ## JSON format
 
-Both files use the same format:
+Your events file and each holiday set use the same event format:
 
 ```json
 {
@@ -145,8 +167,8 @@ Both files use the same format:
 | Field | Required | Meaning |
 |---|---|---|
 | `title` | yes | Event name |
-| `date` | one of `date` / `easter` | `"YYYY-MM-DD"` for a single day, or `"MM-DD"` to repeat every year |
-| `easter` | one of `date` / `easter` | Days from Easter Sunday, e.g. `-2` is Good Friday and `1` is Easter Monday. Easter is calculated for every year. |
+| `date` | one of `date` / `easter` / `month`+`weekday`+`nth` | `"YYYY-MM-DD"` for a single day, or `"MM-DD"` to repeat every year |
+| `easter` | one of `date` / `easter` / `month`+`weekday`+`nth` | Days from Easter Sunday, e.g. `-2` is Good Friday and `1` is Easter Monday. Easter is calculated for every year. |
 | `type` | no | `holiday`, `personal`, `work`, `birthday` or `other`. Holidays are shown in red, other types as coloured dots. |
 | `note` | no | Extra text shown under the title |
 | `id` | no | Unique id. It is created automatically if missing. |
@@ -171,6 +193,6 @@ To serve it locally, open a terminal in the folder and run `python -m http.serve
 - **The Data files… dialog says linking isn't available.** Open `index.html` directly in Edge or Chrome, or from an `https://` or `localhost` address. Plain `http://` intranet addresses and embedded viewers can't link files.
 - **"Couldn't save to calendar.json – is it open elsewhere?"** Close the file in other programs, then press **Save**.
 - **The calendar and the file disagree.** The calendar asks which version to keep before overwriting anything.
-- **A holiday is missing or wrong.** Edit `czech-holidays.json`, then use **Reload from file**.
+- **A holiday is missing or wrong.** Edit `holidays.json`, then use **Reload from file**.
 - **Only one palette, no Colours menu.** `theme.json` isn't connected. Connect it under **Colours file** in **Data files…**.
 - **Only English is in the language menu.** `translations.json` isn't connected. Open **Data files…** and connect it under **Translations file**.

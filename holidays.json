@@ -1,0 +1,320 @@
+{
+  "name": "Public holidays",
+  "description": "Public holiday sets for the Year Calendar; pick one in the holidays menu. Each set has a \"name\" (one text, or one per language) and \"events\". Dates: \"MM-DD\" every year, \"YYYY-MM-DD\" one day, \"easter\": N days from (Western) Easter Sunday, or \"month\" + \"weekday\" (Mon…Sun) + \"nth\" (1–5, or -1 for the last), e.g. Thanksgiving = month 11, Thu, 4. \"observed\": true also marks the weekday off when the date falls on a weekend (Saturday → Friday, Sunday → Monday). Russian weekend transfers set by decree each year are not included.",
+  "default": "cz",
+  "sets": {
+    "cz": {
+      "name": {
+        "en": "Czech Republic",
+        "cs": "Česko",
+        "ru": "Чехия"
+      },
+      "description": "Státní a ostatní svátky ČR (zákon č. 245/2000 Sb.). Date formats: \"MM-DD\" repeats every year, \"YYYY-MM-DD\" is a single day, \"easter\": N is N days from Easter Sunday.",
+      "events": [
+        {
+          "id": "cz-0101",
+          "date": "01-01",
+          "title": "Den obnovy samostatného českého státu",
+          "note": "Restoration Day of the Independent Czech State · New Year's Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-good-friday",
+          "easter": -2,
+          "title": "Velký pátek",
+          "note": "Good Friday",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-easter-monday",
+          "easter": 1,
+          "title": "Velikonoční pondělí",
+          "note": "Easter Monday",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-0501",
+          "date": "05-01",
+          "title": "Svátek práce",
+          "note": "Labour Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-0508",
+          "date": "05-08",
+          "title": "Den vítězství",
+          "note": "Liberation Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-0705",
+          "date": "07-05",
+          "title": "Den slovanských věrozvěstů Cyrila a Metoděje",
+          "note": "Saints Cyril and Methodius Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-0706",
+          "date": "07-06",
+          "title": "Den upálení mistra Jana Husa",
+          "note": "Jan Hus Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-0928",
+          "date": "09-28",
+          "title": "Den české státnosti",
+          "note": "St. Wenceslas Day (Czech Statehood Day)",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-1028",
+          "date": "10-28",
+          "title": "Den vzniku samostatného československého státu",
+          "note": "Independent Czechoslovak State Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-1117",
+          "date": "11-17",
+          "title": "Den boje za svobodu a demokracii",
+          "note": "Struggle for Freedom and Democracy Day · International Students' Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-1224",
+          "date": "12-24",
+          "title": "Štědrý den",
+          "note": "Christmas Eve",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-1225",
+          "date": "12-25",
+          "title": "1. svátek vánoční",
+          "note": "Christmas Day",
+          "type": "holiday"
+        },
+        {
+          "id": "cz-1226",
+          "date": "12-26",
+          "title": "2. svátek vánoční",
+          "note": "St. Stephen's Day",
+          "type": "holiday"
+        }
+      ]
+    },
+    "ru": {
+      "name": {
+        "en": "Russia",
+        "cs": "Rusko",
+        "ru": "Россия"
+      },
+      "description": "Нерабочие праздничные дни РФ (ст. 112 ТК РФ). Переносы выходных дней по постановлению Правительства не включены.",
+      "events": [
+        {
+          "id": "ru-0101",
+          "date": "01-01",
+          "title": "Новый год",
+          "note": "New Year's Day",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0102",
+          "date": "01-02",
+          "title": "Новогодние каникулы",
+          "note": "New Year holidays",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0103",
+          "date": "01-03",
+          "title": "Новогодние каникулы",
+          "note": "New Year holidays",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0104",
+          "date": "01-04",
+          "title": "Новогодние каникулы",
+          "note": "New Year holidays",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0105",
+          "date": "01-05",
+          "title": "Новогодние каникулы",
+          "note": "New Year holidays",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0106",
+          "date": "01-06",
+          "title": "Новогодние каникулы",
+          "note": "New Year holidays",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0107",
+          "date": "01-07",
+          "title": "Рождество Христово",
+          "note": "Orthodox Christmas",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0108",
+          "date": "01-08",
+          "title": "Новогодние каникулы",
+          "note": "New Year holidays",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0223",
+          "date": "02-23",
+          "title": "День защитника Отечества",
+          "note": "Defender of the Fatherland Day",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0308",
+          "date": "03-08",
+          "title": "Международный женский день",
+          "note": "International Women's Day",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0501",
+          "date": "05-01",
+          "title": "Праздник Весны и Труда",
+          "note": "Spring and Labour Day",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0509",
+          "date": "05-09",
+          "title": "День Победы",
+          "note": "Victory Day",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-0612",
+          "date": "06-12",
+          "title": "День России",
+          "note": "Russia Day",
+          "type": "holiday"
+        },
+        {
+          "id": "ru-1104",
+          "date": "11-04",
+          "title": "День народного единства",
+          "note": "Unity Day",
+          "type": "holiday"
+        }
+      ]
+    },
+    "us": {
+      "name": {
+        "en": "United States",
+        "cs": "USA",
+        "ru": "США"
+      },
+      "description": "US federal holidays (5 U.S.C. 6103), with observed days for weekend dates.",
+      "events": [
+        {
+          "id": "us-0101",
+          "date": "01-01",
+          "title": "New Year's Day",
+          "note": "Federal holiday",
+          "type": "holiday",
+          "observed": true
+        },
+        {
+          "id": "us-mlk",
+          "month": 1,
+          "weekday": "Mon",
+          "nth": 3,
+          "title": "Birthday of Martin Luther King, Jr.",
+          "note": "Third Monday in January",
+          "type": "holiday"
+        },
+        {
+          "id": "us-washington",
+          "month": 2,
+          "weekday": "Mon",
+          "nth": 3,
+          "title": "Washington's Birthday",
+          "note": "Presidents' Day · third Monday in February",
+          "type": "holiday"
+        },
+        {
+          "id": "us-memorial",
+          "month": 5,
+          "weekday": "Mon",
+          "nth": -1,
+          "title": "Memorial Day",
+          "note": "Last Monday in May",
+          "type": "holiday"
+        },
+        {
+          "id": "us-0619",
+          "date": "06-19",
+          "title": "Juneteenth National Independence Day",
+          "note": "Federal holiday",
+          "type": "holiday",
+          "observed": true
+        },
+        {
+          "id": "us-0704",
+          "date": "07-04",
+          "title": "Independence Day",
+          "note": "Federal holiday",
+          "type": "holiday",
+          "observed": true
+        },
+        {
+          "id": "us-labor",
+          "month": 9,
+          "weekday": "Mon",
+          "nth": 1,
+          "title": "Labor Day",
+          "note": "First Monday in September",
+          "type": "holiday"
+        },
+        {
+          "id": "us-columbus",
+          "month": 10,
+          "weekday": "Mon",
+          "nth": 2,
+          "title": "Columbus Day",
+          "note": "Second Monday in October",
+          "type": "holiday"
+        },
+        {
+          "id": "us-1111",
+          "date": "11-11",
+          "title": "Veterans Day",
+          "note": "Federal holiday",
+          "type": "holiday",
+          "observed": true
+        },
+        {
+          "id": "us-thanksgiving",
+          "month": 11,
+          "weekday": "Thu",
+          "nth": 4,
+          "title": "Thanksgiving Day",
+          "note": "Fourth Thursday in November",
+          "type": "holiday"
+        },
+        {
+          "id": "us-1225",
+          "date": "12-25",
+          "title": "Christmas Day",
+          "note": "Federal holiday",
+          "type": "holiday",
+          "observed": true
+        }
+      ]
+    }
+  }
+}
