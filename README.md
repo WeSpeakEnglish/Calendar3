@@ -10,7 +10,7 @@ A year-at-a-glance calendar in the classic wall-calendar layout. Each month show
 | `calendar.json` | Your events | Yes, every change is saved to it |
 | `czech-holidays.json` | Czech public holidays (13 entries) | No, it is only read |
 
-Keep all three in one folder, for example `C:\PRJ_NOVANTA\Calendar\`.
+Keep all three in one folder, for example `C:\PRJ\Calendar\`.
 
 ## First-time setup
 
