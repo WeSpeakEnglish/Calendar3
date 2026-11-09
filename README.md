@@ -10,8 +10,9 @@ A year-at-a-glance calendar in the classic wall-calendar layout. Each month show
 | `calendar.json` | Your events | Yes, every change is saved to it |
 | `czech-holidays.json` | Czech public holidays (13 entries) | No, it is only read |
 | `translations.json` | Interface texts: English, Czech, Russian | No, it is only read |
+| `theme.json` | Colour palettes: Cosy, Classic, Forest, Lavender | No, it is only read |
 
-Keep all four in one folder, for example `C:\PRJ\Calendar\`.
+Keep all five in one folder, for example `C:\PRJ\Calendar\`.
 
 ## First-time setup
 
@@ -19,14 +20,15 @@ Keep all four in one folder, for example `C:\PRJ\Calendar\`.
 2. Click **Save**. A Save-as window opens with `calendar.json` suggested. Keep the name or type your own, choose the folder, and save. Allow editing when the browser asks.
 3. Click **Data files…**. Under **Public holidays file**, click **Connect file…** and choose `czech-holidays.json`.
 4. Under **Translations file**, click **Connect file…** and choose `translations.json`.
+5. Under **Colours file**, click **Connect file…** and choose `theme.json`.
 
-The calendar remembers the file you last saved to and loads it the next time you open the calendar. It also remembers the holidays and translations files. If the browser needs permission again, the button turns amber and reads **Reconnect files**. One click reconnects all of them.
+The calendar remembers the file you last saved to and loads it the next time you open the calendar. It also remembers the holidays, translations and colours files. If the browser needs permission again, the button turns amber and reads **Reconnect files**. One click reconnects all of them.
 
 To use an events file you already have instead, click **Data files…** → **Open an events file…**.
 
-Without this setup the calendar still works. Events are kept in the browser, the built-in Czech holidays are used, and the interface is in English only.
+Without this setup the calendar still works. Events are kept in the browser, the built-in Czech holidays are used, the interface is in English only, and only the Cosy colours are available.
 
-When the calendar is served from a web server, `czech-holidays.json` and `translations.json` next to `index.html` are loaded automatically, so steps 3 and 4 aren't needed. When `index.html` is opened directly from disk, browsers don't let a page read neighbouring files on its own, so connect them once.
+When the calendar is served from a web server, `czech-holidays.json`, `translations.json` and `theme.json` next to `index.html` are loaded automatically, so steps 3–5 aren't needed. When `index.html` is opened directly from disk, browsers don't let a page read neighbouring files on its own, so connect them once.
 
 ## Everyday use
 
@@ -50,13 +52,13 @@ None of these touch the holidays.
 
 ## Holidays and translations options (Data files…)
 
-The **Public holidays file** and **Translations file** rows have the same buttons:
+The **Public holidays file**, **Translations file** and **Colours file** rows have the same buttons:
 
 - **Connect file…** links a JSON file on disk; it is read on every visit.
 - **Reload from file** re-reads it after you edit it.
 - **Disconnect** stops reading the file but keeps the last loaded copy.
 - **Load JSON…** loads a file once and keeps a copy in the browser. This works in every browser.
-- **Use built-in** returns to the default: Czech holidays, and English-only texts. On a server, the files next to `index.html` are used instead.
+- **Use built-in** returns to the default: Czech holidays, English-only texts, and the Cosy colours. On a server, the files next to `index.html` are used instead.
 
 To use another country's holidays, make a file in the same format and connect it instead.
 
@@ -84,6 +86,46 @@ To use another country's holidays, make a file in the same format and connect it
 - Any `ui` text missing from a language falls back to English.
 - Texts can contain placeholders such as `{name}` or `{n}`. The calendar fills them in, so keep them as they are.
 - After editing, use **Reload from file** in **Data files…**, or reload the page if the calendar is served from a server.
+
+## Colours
+
+Pick a palette in the **Colours** menu in the header (Cosy, Classic, Forest, Lavender). Your choice is remembered in the browser.
+
+All colours live in `theme.json`. Each palette has `light` colours and `dark` colours; the dark ones are used when the computer is in dark mode.
+
+```json
+{
+  "default": "cosy",
+  "palettes": {
+    "mine": {
+      "name": "My colours",
+      "light": { "bg": "#f3ede4", "surface": "#fffaf4", "accent": "#3f6b57", "heading": "#9b2f45" },
+      "dark":  { "bg": "#1c1916", "surface": "#26221e", "accent": "#8fc2a6", "heading": "#eb93a3" }
+    }
+  }
+}
+```
+
+| Name | What it colours |
+|---|---|
+| `bg` | Page background |
+| `surface` | Month cards, side panel, buttons |
+| `surface2` | Weekends in the month view, hover, event boxes |
+| `ink` | Main text |
+| `muted` | Labels and secondary text |
+| `line` | Borders |
+| `heading` | Month names and the year |
+| `sun` | Sundays and public holidays |
+| `accent` | Today, selected day, main buttons |
+| `accentSoft` | Soft accent (current month outline, Undo link) |
+| `onAccent` | Text on accent-coloured backgrounds |
+| `holiday`, `personal`, `work`, `birthday`, `other` | Event type colours |
+
+- **To change a colour,** edit its value. You can use any CSS colour, e.g. `#3f6b57`, `rgb(63 107 87)` or `teal`.
+- **To make your own palette,** copy a palette block under a new key, give it a `name` and change the values. It appears in the **Colours** menu.
+- **To pick the first palette for new users,** set `default` to that palette's key.
+- **Missing values** fall back to the Cosy colours. If a palette has no `dark` block, its light colours are used in dark mode too.
+- **After editing,** use **Reload from file** in **Data files…**, or reload the page if the calendar is served from a server.
 
 ## JSON format
 
@@ -113,7 +155,7 @@ Entries that are missing a title or a valid date are skipped, and the calendar t
 
 ## Where things are stored
 
-| Opened as | Events | Holidays and translations |
+| Opened as | Events | Holidays, translations, colours |
 |---|---|---|
 | `index.html` from disk in Edge/Chrome | Linked `calendar.json`, plus a copy in the browser | Linked files, or the built-in copies |
 | From a web server (`https://` or `localhost`) | Same as above | The files next to `index.html` on the server are used by default |
@@ -130,4 +172,5 @@ To serve it locally, open a terminal in the folder and run `python -m http.serve
 - **"Couldn't save to calendar.json – is it open elsewhere?"** Close the file in other programs, then press **Save**.
 - **The calendar and the file disagree.** The calendar asks which version to keep before overwriting anything.
 - **A holiday is missing or wrong.** Edit `czech-holidays.json`, then use **Reload from file**.
+- **Only one palette, no Colours menu.** `theme.json` isn't connected. Connect it under **Colours file** in **Data files…**.
 - **Only English is in the language menu.** `translations.json` isn't connected. Open **Data files…** and connect it under **Translations file**.

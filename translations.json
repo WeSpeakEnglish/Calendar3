@@ -42,7 +42,7 @@
         "dataFiles": "Data files…",
         "reconnectFiles": "Reconnect files",
         "fileBtnLinked": "File: {name}",
-        "dataFilesTip": "Events, holidays and translations files",
+        "dataFilesTip": "Events, holidays, translations and colours files",
         "reconnectTip": "Click to allow access and load the files",
         "language": "Language",
         "importEvents": "Import events…",
@@ -109,7 +109,7 @@
         "srcBuiltIn": "Using the built-in copy (or {file} next to the calendar on a server).",
         "srcStored": "Using a copy of “{name}” kept in this browser.",
         "entries": "{n} entries.",
-        "dataFilesHelp": "Choose each file once, e.g. C:\\PRJ\\Calendar\\calendar.json. The calendar remembers them: every event change is saved to the events file, and all files are loaded when you open the calendar. The holidays and translations files are only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.",
+        "dataFilesHelp": "Choose each file once, e.g. C:\\PRJ\\Calendar\\calendar.json. The calendar remembers them: every event change is saved to the events file, and all files are loaded when you open the calendar. The holidays, translations and colours files are only read, never changed. Your browser may ask once per visit to allow access – that's a browser security rule for local files.",
         "fsNoteFrame": "Linking files on your disk works when the calendar is opened as its own page in Edge or Chrome (index.html from disk, https:// or localhost). Here you can still load JSON files and import or copy your events.",
         "fsNoteBrowser": "This browser can't link files on your disk (use Edge or Chrome). You can still load JSON files and import or export your events.",
         "askReplaceTitle": "Replace your events?",
@@ -169,7 +169,9 @@
         "prevMonth": "Previous month",
         "nextMonth": "Next month",
         "openMonth": "Open {month}",
-        "more": "+{n} more"
+        "more": "+{n} more",
+        "palette": "Colours",
+        "themeFile": "Colours file"
       }
     },
     "cs": {
@@ -212,7 +214,7 @@
         "dataFiles": "Datové soubory…",
         "reconnectFiles": "Znovu připojit soubory",
         "fileBtnLinked": "Soubor: {name}",
-        "dataFilesTip": "Soubory událostí, svátků a překladů",
+        "dataFilesTip": "Soubory událostí, svátků, překladů a barev",
         "reconnectTip": "Klikněte pro povolení přístupu a načtení souborů",
         "language": "Jazyk",
         "importEvents": "Importovat události…",
@@ -279,7 +281,7 @@
         "srcBuiltIn": "Používá se vestavěná kopie (nebo {file} vedle kalendáře na serveru).",
         "srcStored": "Používá se kopie „{name}“ uložená v tomto prohlížeči.",
         "entries": "Položek: {n}.",
-        "dataFilesHelp": "Každý soubor vyberte jen jednou, např. C:\\PRJ\\Calendar\\calendar.json. Kalendář si je pamatuje: každá změna událostí se ukládá do souboru událostí a všechny soubory se načtou při otevření kalendáře. Soubory svátků a překladů se jen čtou, nikdy se nemění. Prohlížeč se může jednou za návštěvu zeptat na povolení přístupu – je to bezpečnostní pravidlo prohlížeče pro místní soubory.",
+        "dataFilesHelp": "Každý soubor vyberte jen jednou, např. C:\\PRJ\\Calendar\\calendar.json. Kalendář si je pamatuje: každá změna událostí se ukládá do souboru událostí a všechny soubory se načtou při otevření kalendáře. Soubory svátků, překladů a barev se jen čtou, nikdy se nemění. Prohlížeč se může jednou za návštěvu zeptat na povolení přístupu – je to bezpečnostní pravidlo prohlížeče pro místní soubory.",
         "fsNoteFrame": "Připojení souborů na disku funguje, když kalendář otevřete jako samostatnou stránku v Edge nebo Chrome (index.html z disku, https:// nebo localhost). Zde můžete i tak načíst soubory JSON a importovat či kopírovat události.",
         "fsNoteBrowser": "Tento prohlížeč neumí připojit soubory na disku (použijte Edge nebo Chrome). I tak můžete načíst soubory JSON a importovat či exportovat události.",
         "askReplaceTitle": "Nahradit události?",
@@ -339,7 +341,9 @@
         "prevMonth": "Předchozí měsíc",
         "nextMonth": "Další měsíc",
         "openMonth": "Otevřít {month}",
-        "more": "+{n} další"
+        "more": "+{n} další",
+        "palette": "Barvy",
+        "themeFile": "Soubor barev"
       }
     },
     "ru": {
@@ -382,7 +386,7 @@
         "dataFiles": "Файлы данных…",
         "reconnectFiles": "Подключить файлы заново",
         "fileBtnLinked": "Файл: {name}",
-        "dataFilesTip": "Файлы событий, праздников и переводов",
+        "dataFilesTip": "Файлы событий, праздников, переводов и цветов",
         "reconnectTip": "Нажмите, чтобы разрешить доступ и загрузить файлы",
         "language": "Язык",
         "importEvents": "Импорт событий…",
@@ -449,7 +453,7 @@
         "srcBuiltIn": "Используется встроенная копия (или {file} рядом с календарём на сервере).",
         "srcStored": "Используется копия «{name}», сохранённая в этом браузере.",
         "entries": "Записей: {n}.",
-        "dataFilesHelp": "Выберите каждый файл один раз, напр. C:\\PRJ\\Calendar\\calendar.json. Календарь их запоминает: каждое изменение событий сохраняется в файл событий, а все файлы загружаются при открытии календаря. Файлы праздников и переводов только читаются и не изменяются. Браузер может раз за визит запросить разрешение на доступ – это правило безопасности браузера для локальных файлов.",
+        "dataFilesHelp": "Выберите каждый файл один раз, напр. C:\\PRJ\\Calendar\\calendar.json. Календарь их запоминает: каждое изменение событий сохраняется в файл событий, а все файлы загружаются при открытии календаря. Файлы праздников, переводов и цветов только читаются и не изменяются. Браузер может раз за визит запросить разрешение на доступ – это правило безопасности браузера для локальных файлов.",
         "fsNoteFrame": "Подключение файлов на диске работает, когда календарь открыт как отдельная страница в Edge или Chrome (index.html с диска, https:// или localhost). Здесь можно загрузить файлы JSON, а также импортировать или скопировать события.",
         "fsNoteBrowser": "Этот браузер не умеет подключать файлы на диске (используйте Edge или Chrome). Можно загрузить файлы JSON и импортировать или экспортировать события.",
         "askReplaceTitle": "Заменить события?",
@@ -509,7 +513,9 @@
         "prevMonth": "Предыдущий месяц",
         "nextMonth": "Следующий месяц",
         "openMonth": "Открыть: {month}",
-        "more": "ещё {n}"
+        "more": "ещё {n}",
+        "palette": "Цвета",
+        "themeFile": "Файл цветов"
       }
     }
   }
