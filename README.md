@@ -1,6 +1,8 @@
-# Year Calendar
+# Calendar3 - easy to use year calendar
 
 A year-at-a-glance calendar in the classic wall-calendar layout. Each month shows weekdays as rows and weeks as columns, and Sundays and public holidays are in red. You can add your own events. Events and public holidays are kept in two separate JSON files that the calendar connects to, the same way the Change board does.
+
+▶ Live app: [Open](https://wespeakenglish.github.io/Calendar3/) use the calendar right now!
 
 ## Files
 
