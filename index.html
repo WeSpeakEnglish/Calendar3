@@ -341,7 +341,7 @@ dialog[open] { display: block }
 
 <script>
 /* shows a script error on screen (handy on e-readers without developer tools) */
-window.onerror = function (msg, src, line) { try { var d = document.getElementById("jsErr"); if (!d) { d = document.createElement("div"); d.id = "jsErr";
+window.onerror = function (msg, src, line) { if (!line || /^script error\.?$/i.test(String(msg))) return true; try { var d = document.getElementById("jsErr"); if (!d) { d = document.createElement("div"); d.id = "jsErr";
   d.style.cssText = "position:fixed;top:0;left:0;right:0;background:#fff;color:#b00;border-bottom:2px solid #b00;padding:6px 10px;font:13px sans-serif;z-index:99";
   document.body.appendChild(d); } d.textContent = "Script error: " + msg + " (line " + line + ")"; } catch (e) {} };
 </script>
