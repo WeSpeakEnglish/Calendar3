@@ -4,7 +4,11 @@
   "default": "cosy",
   "palettes": {
     "cosy": {
-      "name": "Cosy",
+      "name": {
+        "en": "Cosy",
+        "cs": "Útulná",
+        "ru": "Уютная"
+      },
       "light": {
         "bg": "#f3ede4",
         "surface": "#fffaf4",
@@ -43,7 +47,11 @@
       }
     },
     "classic": {
-      "name": "Classic",
+      "name": {
+        "en": "Classic",
+        "cs": "Klasická",
+        "ru": "Классическая"
+      },
       "light": {
         "bg": "#f6f7f8",
         "surface": "#ffffff",
@@ -82,7 +90,11 @@
       }
     },
     "forest": {
-      "name": "Forest",
+      "name": {
+        "en": "Forest",
+        "cs": "Les",
+        "ru": "Лес"
+      },
       "light": {
         "bg": "#eef1ea",
         "surface": "#fbfcf8",
@@ -121,7 +133,11 @@
       }
     },
     "lavender": {
-      "name": "Lavender",
+      "name": {
+        "en": "Lavender",
+        "cs": "Levandule",
+        "ru": "Лаванда"
+      },
       "light": {
         "bg": "#f1eef5",
         "surface": "#fcfbfe",

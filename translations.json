@@ -29,6 +29,7 @@
         "Su"
       ],
       "ui": {
+        "pageTitle": "Year Calendar",
         "prevYear": "Previous year",
         "nextYear": "Next year",
         "today": "Today",
@@ -205,6 +206,7 @@
         "Ne"
       ],
       "ui": {
+        "pageTitle": "Roční kalendář",
         "prevYear": "Předchozí rok",
         "nextYear": "Další rok",
         "today": "Dnes",
@@ -381,6 +383,7 @@
         "Вс"
       ],
       "ui": {
+        "pageTitle": "Календарь на год",
         "prevYear": "Предыдущий год",
         "nextYear": "Следующий год",
         "today": "Сегодня",
